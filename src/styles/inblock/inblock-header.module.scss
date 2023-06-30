@@ -1,0 +1,16 @@
+.headerContainer {
+    width: 100%;
+    background-color: #ffdd00;
+    min-height: 75px;
+    height: 75px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 985px) {
+    .headerContainer {
+        min-height: 70px;
+        height: 70px;
+    }
+}

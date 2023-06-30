@@ -1,0 +1,5 @@
+.container {
+  & > .sidebar-and-content-container {
+    display: flex;
+  }
+}

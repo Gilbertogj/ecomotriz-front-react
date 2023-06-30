@@ -1,0 +1,222 @@
+@import "~bootstrap/scss/bootstrap";
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 10px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #696969;
+}
+
+html,
+body,
+.App {
+  font-family: "Mulish", sans-serif;
+  color: #272727;
+  overflow-y: hidden;
+}
+
+html, body, #root, .App {
+  height: 100vh;
+  height: -webkit-fill-available;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+.list-group-item {
+  color: #272727;
+}
+
+.list-group {
+  padding: 0;
+}
+
+.table-link {
+  color: #272727;
+}
+
+tr {
+  & > td {
+    color: #272727 !important;
+    & > a {
+      color: #272727;
+    }
+  }
+}
+
+.header-mobile {
+  background-color: #9F1D2B;
+}
+
+.toggle-menu-link {
+  color: white;
+}
+
+.blue-table {
+  & td {
+    border: #212C56 2px solid;
+  }
+}
+
+.cotizacion-container {
+  font-family: system-ui;
+}
+
+.cotizacion-condiciones {
+  & p {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+}
+
+.tabla-cliente {
+  & th {
+    background-color: #212C56;
+    color: white;
+    border: #212C56 2px solid;
+    text-align: center;
+  }
+}
+
+.tabla-diseños {
+  & th {
+    background-color: #212C56;
+    color: white;
+    border: #212C56 2px solid;
+    text-align: center;
+  }
+}
+
+.tabla-servicios {
+  & th {
+    background-color: #212C56;
+    color: white;
+    border: #212C56 2px solid;
+  }
+
+  & td {
+    color: black;
+  }
+}
+
+.servicio {
+  cursor: pointer;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.servicio-activo {
+  background-color: #277dff;
+}
+
+.tabla-detalles-diseños {
+  & td {
+    text-align: center;
+    color: black;
+  }
+}
+
+.seccion-activa {
+ background-color: #F2ECEC;
+}
+
+.cotizacion-header-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mapa {
+  width: 100%;
+  height: 480px;
+}
+
+.mapa-asesores-container {
+  width: 25%;
+}
+
+.bullet-list-asesor {
+  height: 10px;
+  min-height: 10px;
+  width: 10px;
+  min-width: 10px;
+  border-radius: 50%;
+}
+
+.calendar-container {
+  & div {
+    max-width: 100%;
+  }
+
+  & > div:nth-child(2) {
+    z-index: 10;
+  }
+}
+
+.graph-container {
+  min-width: 100%;
+  overflow-x: auto;
+}
+
+.paginacion-btns-container {
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: nowrap;
+
+  & * {
+    margin: 0 3px;
+  }
+}
+
+
+
+@media screen and (max-width: 768px) {
+  .cotizacion-header-container {
+    flex-direction: column;
+    align-items: center;
+    & > div {
+      margin: 0.5rem;
+    }
+  }
+
+  .tabla-servicios-body {
+    font-size: 13px;
+  }
+
+  .mapa-asesores-container {
+    width: 100%;
+  }
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    display: none;
+  }
+}
+

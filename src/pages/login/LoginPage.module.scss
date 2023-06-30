@@ -1,0 +1,59 @@
+.loginPageContainer {
+  height: 100vh;
+  height: -webkit-fill-available;
+  
+  background-image: url("../../assets/svg/background.svg");
+  background-position-x: 50%;
+  background-position-y: 50%;
+  background-size: cover;
+  
+
+
+ 
+
+  
+}
+
+.logoImg {
+  max-height: 200px;
+ 
+  
+}
+.logoContainer {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  
+
+  
+}
+
+@media screen and (min-width: 768px) {
+  .loginPageContainer {
+    // background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    // margin-top: 50px;
+    // margin-bottom: 50px;
+
+  }
+
+  .logoContainer {
+    display: flex;
+    justify-content: end;
+    
+
+    
+  }
+
+  .loginFormContainer {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+
+    .logoImg {
+      max-height: 250px;
+    }
+}

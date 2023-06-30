@@ -1,0 +1,15 @@
+.outerContainer {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.innerContainer {
+    z-index: 2;
+}
+
+@media screen and (max-width: 768px) {
+    .innerContainer {
+        margin-top: 1rem;
+    }
+}

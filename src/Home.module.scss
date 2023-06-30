@@ -1,0 +1,30 @@
+.homePage {
+    height: 100vh;
+    height: -webkit-fill-available;
+    background-image: url('./assets//grupoeco/img/Fondo.png');
+    background-size: cover;
+}
+
+.imgContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img {
+    width: 400px;
+    height: 400px;
+}
+
+.logoButtonsContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.logoContainer {
+    background-color: #9F1D2B;
+    width: 100px;
+    height: 100px;
+    margin: 1rem;
+    border-radius: 1rem;
+}
