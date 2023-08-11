@@ -27,7 +27,8 @@ html,
 body,
 .App {
   font-family: "Mulish", sans-serif;
-  color: #272727;
+  // color: #272727;
+  color: #212C56;
   overflow-y: hidden;
 }
 
@@ -50,7 +51,8 @@ a {
 }
 
 .list-group-item {
-  color: #272727;
+   // color: #272727;
+   color: #212C56;
 }
 
 .list-group {
@@ -58,20 +60,23 @@ a {
 }
 
 .table-link {
-  color: #272727;
+   // color: #272727;
+   color: #212C56;
 }
 
 tr {
   & > td {
-    color: #272727 !important;
+    color: #212C56 !important;
     & > a {
-      color: #272727;
+      color: #212C56;
     }
   }
 }
 
 .header-mobile {
-  background-color: #9F1D2B;
+  background-color: #198836;
+  min-height: 70px;
+  height: 70px;
 }
 
 .toggle-menu-link {
@@ -83,6 +88,7 @@ tr {
     border: #212C56 2px solid;
   }
 }
+
 
 .cotizacion-container {
   font-family: system-ui;
@@ -150,7 +156,8 @@ tr {
 
 .cotizacion-header-container {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .mapa {
@@ -201,6 +208,7 @@ tr {
   .cotizacion-header-container {
     flex-direction: column;
     align-items: center;
+    
     & > div {
       margin: 0.5rem;
     }

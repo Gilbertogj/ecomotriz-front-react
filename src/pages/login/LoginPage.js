@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Logo from "../../assets/svg/LogoEcomotriz.svg";
+import Logo from "../../assets/ecomotriz/LogoEcomotriz.svg";
 import { LoginForm } from "../../components/loginform/LoginForm";
 // import { HomeButton } from "../../components/home-button/HomeButton";
 

@@ -3,15 +3,20 @@ import { Link, useLocation } from "react-router-dom";
 import { DeleteClientButton } from "../delete-client-button/DeleteClientButton";
 
 import { ReactComponent as EditarLogo } from "../../assets/svg/iconoEditar.svg";
+import SliderUnidad from "../BoostrapCarousel/SliderUnidad.js"
+import SliderMotor from "../BoostrapCarousel/SliderMotor.js"
 
-import "./DetalleUnidad.styles.scss";
+import "./DetalleUnidadOrden.styles.scss";
 
 
-export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
+
+export const DetalleUnidadOrden = ({ detallesUnidad, urlId }) => {
   const { pathname } = useLocation();
 
   return (
+    
     <div className="container">
+      
       {detallesUnidad.id ? (
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
@@ -19,10 +24,10 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
               .
             </div>
             <div className="text-center">
-              <h2>Camión olla </h2>
+              <h2>{detallesUnidad.nombre }</h2>
             </div>
             <div>
-              <div className="d-flex  flex-column align-items-center">
+              {/* <div className="d-flex  flex-column align-items-center">
                 
                     <Link
                       to={`/unidades/editar-unidad/${detallesUnidad.id}`}
@@ -30,24 +35,8 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
                       <div style={{ width: "40px" }}>
                         <EditarLogo />
                       </div>
-                    </Link>
-                  
-              
-               
-                 
-             {/* <Link
-             to={`/unidades/unidad/${detallesUnidad.id}/informacion-financiera/${detallesUnidad.informacion_financiera.id}`}
-             className="btn mb-2"
-             style={{ backgroundColor: "#00C08B", color: "white" }}
-           >
-             Ver Inventario de la unidad
-           </Link>      */}
-      
-
-
-        
-              
-              </div>
+                    </Link>    
+              </div> */}
              
               
               
@@ -94,6 +83,24 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
               <li className="list-group-item">
                 <strong>Tipo de combustible:</strong> {detallesUnidad.tipo_combustible}
               </li>
+
+              <li className="list-group-item">
+              <strong>Fotografías de la unidad:</strong>
+              <SliderUnidad
+                
+                
+                frontal={detallesUnidad.fotografia_frontal}
+                derecha={detallesUnidad.fotografia_derecha}
+                izquierda={detallesUnidad.fotografia_izquierda}
+                trasera={detallesUnidad.fotografia_trasera}
+                cabina={detallesUnidad.fotografia_cabina}
+                placa={detallesUnidad.fotografia_placa_identificacion}
+
+                />
+
+
+              </li>
+              
               {/* <li className="list-group-item">
                 <strong>Fotografía frontal:</strong> 
                 {detallesUnidad.fotografia_frontal ? (
@@ -103,30 +110,6 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
                 href={detallesUnidad.fotografia_frontal}
               >
                 Imagen
-              </a>
-            ) : (
-              " No hay imagen"
-            )}
-
-
-
-              </li> */}
-
-
-             <li className="list-group-item">
-              <script type="text/javascript">
-              const a1 = detallesUnidad.fotografia_derecha;
-              
-              </script>
-             <strong>Fotografía frontal:</strong> 
-              {/* <img id ="foo"src={detallesUnidad.fotografia_frontal} ></img> */}
-              {detallesUnidad.fotografia_frontal ? (
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={detallesUnidad.fotografia_frontal}
-              >
-                {" "}Imagen
               </a>
             ) : (
               " No hay imagen"
@@ -201,7 +184,9 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
             ) : (
               " No hay imagen"
             )}
-              </li>
+              </li> */}
+
+              
               <li className="list-group-item">
                 <strong>Marca motor:</strong> {detallesUnidad.marca_motor}
                 
@@ -213,6 +198,28 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
                 <strong>Numero serie del motor:</strong> {detallesUnidad.numero_serie_motor}
               </li>
               <li className="list-group-item">
+                <strong>Número de serie del chasis:</strong> {detallesUnidad.numero_serie_chasis}
+              </li>
+
+              <li className="list-group-item">
+              <strong>Fotografías del motor:</strong>
+              <SliderMotor
+                
+                
+                frontal={detallesUnidad.foto_motor_frontal}
+                derecha={detallesUnidad.foto_lateral_dereacha}
+                izquierda={detallesUnidad.foto_lateral_izquierda}
+                serie={detallesUnidad.foto_numero_serie_motor}
+                chasis={detallesUnidad.foto_numero_serie_chasis}
+                
+
+                />
+
+
+              </li>
+
+
+              {/* <li className="list-group-item">
                 <strong>Foto frontal del motor:</strong> 
                 {detallesUnidad.foto_motor_frontal ? (
               <a
@@ -268,9 +275,7 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
               " No hay imagen"
             )}
               </li>
-              <li className="list-group-item">
-                <strong>Número de serie del chasis:</strong> {detallesUnidad.numero_serie_chasis}
-              </li>
+              
               <li className="list-group-item">
                 <strong>Foto número de serie del chasis:</strong> 
                 {detallesUnidad.foto_numero_serie_chasis ? (
@@ -284,7 +289,7 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
             ) : (
               " No hay imagen"
             )}
-              </li>
+              </li> */}
               <li className="list-group-item">
                 <strong>Comentarios generales:</strong> {detallesUnidad.comentarios_generales}
               </li>
@@ -297,7 +302,8 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
             </ul>
           </div>
 
-        <div className="d-flex justify-content-end mt-2 ">
+     
+        {/* <div className="d-flex justify-content-end mt-2 ">
              <Link
              to={`/unidades/unidad/${detallesUnidad.id}/inventario`}
              className="btn mb-2"
@@ -378,32 +384,29 @@ export const DetalleUnidad = ({ detallesUnidad, urlId }) => {
 
             
            
-        </div>
-
-        {/* <div className="d-flex justify-content-end mt-2 ">
-            
-            <Link
-              to={`/unidades/unidad/${detallesUnidad.id}/transito/1`}
-              className="btn mb-2"
-              style={{ backgroundColor: "green", color: "white" }}
-            >
-              Ver Inventario de la unidad  
-            </Link>
         </div> */}
 
+        <div className="d-flex justify-content-end mt-2 ">
 
-
-          {/* <div className="d-flex justify-content-end mt-2 ">
-              {pathname.includes("logistica") && !pathname.includes("pedido") && (
-              <Link
-                to={`/concreco/logistica/cliente/${detallesCliente.id}/condicion-venta`}
-                className="btn mb-2"
+        <Link
+                to={`/ordenes-trabajo/unidades-orden/${detallesUnidad.id}/crear-orden`}
+                className="btn  mb-2"
                 style={{ backgroundColor: "#00C08B", color: "white" }}
               >
-                Ver Condiciones de Venta
+                Continuar
               </Link>
-            )}
-            </div> */}
+
+        
+
+
+            
+           
+        </div>
+
+       
+
+
+        
         </>
       ) : (
         <p>No existe la unidad #{urlId} </p>

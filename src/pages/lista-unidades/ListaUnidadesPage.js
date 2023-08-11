@@ -12,18 +12,23 @@ import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner"
 import { FormFiltrosUnidades } from "../../components/form-filtros-unidades/FormFiltrosUnidades";
 import { BotonesPaginacionTablas } from "../../components/botones-paginacion-tablas/BotonesPaginacionTablas";
 
-// const formInitialState = {
-//   planta: "",
-//   estatusPedido: "",
-//   forma: "",
-//   usuario: "",
-// };
+const formInitialState = {
+  empresa_alta: "",
+    empresa_responsable: "",
+    categoria: "",
+    familia: "",
+    subfamilia: "",
+   
+  };
 
 export const ListaUnidadesPage = () => {
   const [unidades, setUnidades] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [finalPage, setFinalPage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [filtrosAplicadosUnidades, setFiltrosAplicadosUnidades] =
+    useState(formInitialState);
+    const [totalUnidades, setTotalUnidades] = useState(null);
 
 
 
@@ -36,12 +41,14 @@ export const ListaUnidadesPage = () => {
 
   useEffect(() => {
     fetchUnidades(`${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/`);
-  }, []);
+  }, [authtoken]);
+  // console.log(authtoken);
 
   const fetchUnidades = async (url) => {
     setIsLoading(true);
     const data = await fetchData(url ,authtoken, dispatch, setCurrentUser);
-    setUnidades(data);
+    setUnidades(data.results);
+    setFinalPage(Math.ceil(data.count / 10));
 
     setIsLoading(false);
   
@@ -51,66 +58,78 @@ export const ListaUnidadesPage = () => {
   //   const newCurrentPage = currentPage + num;
 
   //   fetchUnidades(
-  //     `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api/pedidos/?planta_id=${
-  //       filtrosAplicadosPedidos.planta ? filtrosAplicadosPedidos.planta : ""
-  //     }&status_pedido=${
-  //       filtrosAplicadosPedidos.estatusPedido
-  //         ? filtrosAplicadosPedidos.estatusPedido
-  //         : ""
-  //     }&forma=${
-  //       filtrosAplicadosPedidos.forma ? filtrosAplicadosPedidos.forma : ""
-  //     }&Ventas=${
-  //       filtrosAplicadosPedidos.usuario ? filtrosAplicadosPedidos.usuario : ""
-  //     }&search=${busquedaAplicada ? busquedaAplicada : ""}&fecha_intervalo=${
-  //       fechasFiltroAplicados ? fechasFiltroAplicados : ""
+  //     `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/?search=${
+  //       busquedaAplicada ? busquedaAplicada : ""
   //     }&page=${newCurrentPage}`
   //   );
 
   //   setCurrentPage(newCurrentPage);
   // };
 
+  const changePage = (num) => {
+    const newCurrentPage = currentPage + num;
+
+    fetchUnidades(
+      `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/?empresa_alta=${
+        filtrosAplicadosUnidades.empresa_alta ? filtrosAplicadosUnidades.empresa_alta : ""
+      }&fecha_intervalo=${
+        fechasFiltroAplicados ? fechasFiltroAplicados : ""
+      }&categoria=${
+        filtrosAplicadosUnidades.categoria
+          ? filtrosAplicadosUnidades.categoria
+          : ""
+      }&familia=${
+        filtrosAplicadosUnidades.familia ? filtrosAplicadosUnidades.familia : ""
+      }&subfamilia=${
+        filtrosAplicadosUnidades.subfamilia ? filtrosAplicadosUnidades.subfamilia : ""
+      }&search=${busquedaAplicada ? busquedaAplicada : ""}&page=${newCurrentPage}`
+    );
+
+    setCurrentPage(newCurrentPage);
+  };
+
   return (
     <Container style={{ maxWidth: "100%", maxHeight: "100%" }}>
       <Row className="text-center mb-3">
-        <h3 className="m-0">Lista de Unidades</h3>
+        <h3 className="m-0">Seleccionar Unidad</h3>
       </Row>
 
-      {/* {userRol !== "Operador" && ( */}
-        {/* <Row className="mb-3 justify-content-center">
+      {/* {userRol !== "Operador" && (
+        <Row className="mb-3 justify-content-center">
           <div className="col-12 col-sm-7">
             <SearchInput
               unidades={unidades}
               setUnidades={setUnidades}
               setCurrentPage={setCurrentPage}
               setFinalPage={setFinalPage}
-              setSumaM3={setSumaM3}
+             
               url={process.env.REACT_APP_API_CONCRECO_BACKEND_URL + "/api/pedidos/?search="}
               setIsLoading={setIsLoading}
-              setTotalPedidos={setTotalPedidos}
+              setTotalUnidades={setTotalUnidades}
               setBusquedaAplicada={setBusquedaAplicada}
               setFiltrosAplicadosPedidos={setFiltrosAplicadosPedidos}
               setFechasFiltroAplicados={setFechasFiltroAplicados}
             />
           </div>
-        </Row> */}
-      {/* )} */}
+        </Row>
+      )} */}
 
-      {/* {userRol !== "Operador" && ( */}
-        {/* <FormFiltrosUnidades
-          setFiltrosAplicadosPedidos={setFiltrosAplicadosPedidos}
+      {userRol !== "Operador" && ( 
+         <FormFiltrosUnidades
+          setFiltrosAplicadosUnidades={setFiltrosAplicadosUnidades}
           setUnidades={setUnidades}
-          setSumaM3={setSumaM3}
-          setTotalPedidos={setTotalPedidos}
+          
+          setTotalUnidades={setTotalUnidades}
           setIsLoading={setIsLoading}
           setCurrentPage={setCurrentPage}
           setFinalPage={setFinalPage}
           fechasFiltroAplicados={fechasFiltroAplicados}
           setFechasFiltroAplicados={setFechasFiltroAplicados}
           setBusquedaAplicada={setBusquedaAplicada}
-          filtrosAplicadosPedidos={filtrosAplicadosPedidos}
+          filtrosAplicadosUnidades={filtrosAplicadosUnidades}
           busquedaAplicada={busquedaAplicada}
-        /> */}
-      {/* )} */}
+        /> 
+       )} 
 
       {isLoading ? (
         <LoadingSpinner />
@@ -128,9 +147,9 @@ export const ListaUnidadesPage = () => {
           )} */}
           <TablaUnidades unidades={unidades} setUnidades={setUnidades} />
           <BotonesPaginacionTablas
-            // currentPage={currentPage}
-            // finalPage={finalPage}
-            // changePage={changePage}
+            currentPage={currentPage}
+            finalPage={finalPage}
+            changePage={changePage}
             
           />
         </Row>

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import { ReactComponent as LogoBlanco } from "../../assets/svg/logoEcoBlanco.svg";
+import { ReactComponent as LogoBlanco } from "../../assets/ecomotriz/LogoNegativo.svg";
 
 import "./Sidebar.styles.scss";
 

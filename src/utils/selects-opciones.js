@@ -486,6 +486,47 @@ export const OpcionesSelectMarcaMotor = {
   ],
 };
 
+export const OpcionesSelectCategoriaUnidadFiltros = {
+  label: "Categoría",
+  id: "categoria",
+  name: "categoria",
+  defaultValue: "",
+  opciones: [
+    {
+      texto: "Todas",
+      valor: "",
+    },
+    {
+      texto: "Construcción",
+      valor: "Construcción",
+    },
+    {
+      texto: "Logística",
+      valor: "Logística",
+    },
+    {
+      texto: "Carga y manipulación",
+      valor: "Carga y manipulación",
+    },
+    {
+      texto: "Equipo de Asfalto",
+      valor: "Equipo de Asfalto",
+    },
+    {
+      texto: "Concreto",
+      valor: "Concreto",
+    },
+    {
+      texto: "Trituración",
+      valor: "Trituración",
+    },
+    {
+      texto: "Unidades utilitarias",
+      valor: "Unidades utilitarias",
+    },
+    
+  ],
+};
 
 
 

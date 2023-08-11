@@ -1,7 +1,8 @@
 .header-container {
   width: 100%;
   //background-color: #9F1D2B;
-  background-color: #666A6D;
+  // background-color: #212C56;
+  background-color: #198836;
   min-height: 75px;
   height: 75px;
   padding: 0 1rem;
@@ -10,11 +11,12 @@
   z-index: 2;
 }
 
-@media screen and (max-width: 985px) {
+@media screen and (max-width: 768px) {
   .header-container {
     min-height: 70px;
     height: 70px;
-    background-color: #9F1D2B;
+    // background-color: #9F1D2B;
+    background-color: #198836;
   }
 
 }

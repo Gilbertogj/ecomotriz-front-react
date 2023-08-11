@@ -9,7 +9,7 @@ export const MobileMenuButtons = ({ userLinkObj, app }) => {
           backgroundColor: "white",
           border: "2px solid #666A6D",
           height: "4rem",
-          color:"#272727",
+          color:"#212C56",
         }}
         className="m-4 d-flex align-items-center justify-content-center"
       >

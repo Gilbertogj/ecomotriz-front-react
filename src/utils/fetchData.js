@@ -15,7 +15,7 @@ export const fetchData = async (
 
     let data = await fetch(url, {
       headers: {
-        // Authorization: `Token ${token}`,
+        Authorization: `Token ${token}`,
       },
     });
 

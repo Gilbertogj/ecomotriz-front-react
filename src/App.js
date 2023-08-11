@@ -5,7 +5,9 @@ import { ReactReduxContext } from "./context/reactReduxContext";
 
 import { LoginPage } from "./pages/login/LoginPage";
 import { HomePage } from "./pages/home/HomePage";
-import { UnidadesPage } from "./pages/unidades/UnidadesPage";
+import { OrdenesTrabajoPage } from "./pages/ordenes-trabajo/OrdenesTrabajoPage";
+
+
 import { EcomotrizPage } from "./pages/ecomotriz/EcomotrizPage";
 import { ComercializacionPage } from "./pages/comercializacion/ComercializacionPage";
 import { UsersPage } from "./pages/users/UsersPage";
@@ -26,7 +28,7 @@ function App() {
   return (
     
     <div className="App">
-      <title>Activos v2</title>
+      <title>Ecomotriz v1</title>
       <ToastContainer autoClose={3000} hideProgressBar />
       <Switch>
         <Route
@@ -40,13 +42,13 @@ function App() {
           render={() => (currentUser ? <HomePage /> : <Redirect to="/" />)}
         />
         <Route
-          path="/unidades"
+          path="/ordenes-trabajo"
           render={() =>
             currentUser ? (
               userRol === "Administracion" ||
               userRol === "Ventas" ||
               userRol === "Produccion" ? (
-                <UnidadesPage />
+                <OrdenesTrabajoPage />
               ) : (
                 <Redirect to="/home" />
               )

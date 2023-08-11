@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { formatNumToMxnCurrency } from "../../utils/formatNumToMxnCurrency";
+import { ReactReduxContext } from "../../context/reactReduxContext";
+import { setCurrentUser } from "../../redux/user/userSlice";
 
 import Localizacion from "../../assets/img/Localizacion.png";
 import Telefono from "../../assets/img/telefono.png";
@@ -9,6 +11,21 @@ import Logo from "../../assets/img/logo-slogan.png";
 import Tarjetas from "../../assets/img/tarjetas.png";
 import Credito from "../../assets/img/credito.png";
 
+const diseñosInitialState = [
+  {
+    id: 1,
+    busquedaString: "",
+    nombre: "",
+    precioUnitario: "",
+    cantidad: "",
+    diseñosData: [],
+    precios: [],
+    subtotal: "",
+    producto: "",
+    unidad: "",
+    estado:"",
+  },
+];
 export const CotizacionPreview = ({
   cotizacionData,
   form,
@@ -18,6 +35,127 @@ export const CotizacionPreview = ({
   actualizarEstatusBtnRef,
 }) => {
   const isDesktop = useIsDesktop();
+  const [diseños, setDiseños] = useState(diseñosInitialState);
+  const { authtoken, dispatch } = useContext(ReactReduxContext);
+
+  const getDiseños = async (e, diseñoRef) => {
+    setDiseños((prevState) => {
+      const arr = [...prevState];
+
+      arr[diseñoRef.id - 1] = {
+        ...arr[diseñoRef.id - 1],
+        precios: [],
+      };
+
+      return arr;
+    });
+
+    const url = `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/productos/?ubicacion=${form.ciudad}&diseño=${e.target.value}`;
+
+    let data = await fetch(url, {
+      headers: {
+        Authorization: `Token ${authtoken}`,
+      },
+    });
+
+    let json = await data.json();
+
+    if (json.expired) {
+      dispatch(setCurrentUser({ token: json.token }));
+
+      data = await fetch(url, {
+        headers: {
+          Authorization: `Token ${json.token}`,
+        },
+      });
+
+      json = await data.json();
+    }
+
+    setDiseños((prevState) => {
+      const arr = [...prevState];
+
+      arr[diseñoRef.id - 1] = {
+        ...arr[diseñoRef.id - 1],
+        diseñosData: json.results,
+      };
+
+      return arr;
+    });
+  };
+  const changeDiseñoInput = (e, diseñoRef) => {
+    setDiseños((prevState) => {
+      const arr = [...prevState];
+
+      if (e.target.name === "busquedaString") {
+        arr[diseñoRef.id - 1] = {
+          ...arr[diseñoRef.id - 1],
+          precioUnitario: "",
+          nombre: "",
+          producto: "",
+        };
+      }
+
+      if (e.target.name === "nombre") {
+        arr[diseñoRef.id - 1] = {
+          ...arr[diseñoRef.id - 1],
+          precioUnitario: "",
+        };
+      }
+
+      arr[diseñoRef.id - 1] = {
+        ...arr[diseñoRef.id - 1],
+        [`${e.target.name}`]: e.target.value,
+      };
+
+      return arr;
+    });
+  };
+
+  const agregarDiseño = () => {
+    setDiseños((prevState) => {
+      const newArr = [...prevState];
+
+      newArr.push({
+        id: diseños.length + 1,
+        busquedaString: "",
+        nombre: "",
+        precioUnitario: "",
+        cantidad: "",
+        diseñosData: [],
+        precios: [],
+        subtotal: "",
+        producto: "",
+        unidad: "",
+      });
+
+      return newArr;
+    });
+  };
+
+  const eliminarDiseño = () => {
+    setDiseños((prevState) => {
+      const newArr = [...prevState];
+      newArr.pop();
+      return newArr;
+    });
+  };
+  const actualizarSubtotal = (diseñoRef) => {
+    setDiseños((prevState) => {
+      const arr = [...prevState];
+
+      arr[diseñoRef.id - 1] = {
+        ...arr[diseñoRef.id - 1],
+        subtotal:
+          prevState[diseñoRef.id - 1].precioUnitario &&
+          prevState[diseñoRef.id - 1].cantidad &&
+          Number(prevState[diseñoRef.id - 1].precioUnitario) *
+            Number(prevState[diseñoRef.id - 1].cantidad),
+      };
+
+      return arr;
+    });
+  };
 
   return (
     <div className="cotizacion-container">
@@ -26,7 +164,7 @@ export const CotizacionPreview = ({
           className="d-flex flex-column flex-md-row align-items-center align-items-md-end"
           onSubmit={handleSubmit}
         >
-          <div className="d-flex flex-column">
+          {/* <div className="d-flex flex-column">
             <label htmlFor="aprobacion">Aprobación</label>
             <select
               name="aprobacion"
@@ -39,8 +177,8 @@ export const CotizacionPreview = ({
               <option value="Aceptada">Aceptada</option>
               <option value="Rechazada">Rechazada</option>
             </select>
-          </div>
-          <div className="d-flex flex-column mx-0 mx-md-3 my-3 my-md-0">
+          </div> */}
+          {/* <div className="d-flex flex-column mx-0 mx-md-3 my-3 my-md-0">
             <label htmlFor="status">Estatus</label>
             <select
               name="estado"
@@ -53,76 +191,49 @@ export const CotizacionPreview = ({
               <option value="Aprobada">Aprobada</option>
               <option value="Por aprobar">Por aprobar</option>
             </select>
-          </div>
+          </div> */}
           <div>
             <input
               type="submit"
-              value="Actualizar Estatus"
-              className="btn btn-primary"
+              value="Cerrar Orden de Trabajo"
+              className="btn btn-success"
               ref={actualizarEstatusBtnRef}
               disabled
             />
           </div>
         </form>
-        {isDesktop && (
+        {/* {isDesktop && (
           <div className="d-flex align-items-end">
             <button className="btn btn-success" onClick={handleDescargarPdf}>
               Descargar PDF
             </button>
           </div>
-        )}
+        )} */}
       </div>
 
       <div className="to-image">
         <div className="cotizacion-header-container  py-3">
-          <div className="d-flex align-items-center">
+          {/* <div className="d-flex align-items-center">
             <img src={Logo} alt="logo" />
-          </div>
-          <div className="d-flex flex-column align-items-center text-center">
-            <h5>Premezclados Concreco S.A de C.V</h5>
-            <div className="text-dark">
-              <div>
-                <img src={Localizacion} alt="localizacion-pgn" />
-                <strong>
-                  Blvd. José Ma. Morelos #2735 <br /> Col. Las Maravillas
-                </strong>
-              </div>
-              <div>
-                <img src={Telefono} alt="telefono-png" />
-                <strong> (477) 771 6550 y 90 </strong>
-              </div>
-              <div>
-                <img src={Internet} alt="internet-png" />
-                <strong> www.concreco.com </strong>
-              </div>
-            </div>
-          </div>
+          </div> */}
+          
           <div className="d-flex align-items-center">
             <table className="blue-table">
               <tbody>
                 <tr>
                   <td>Folio Cotización:</td>
-                  <td className="text-center">{cotizacionData.folio}</td>
+                  <td className="text-center">M-125</td>
                 </tr>
                 <tr>
                   <td>Fecha de elaboración:</td>
                   <td className="text-center">
-                    {cotizacionData.created_at
-                      .slice(0, 10)
-                      .split("-")
-                      .reverse()
-                      .join("-")}
+                    prueba
                   </td>
                 </tr>
+                
                 <tr>
-                  <td>Vigencia de cotización:</td>
-                  <td className="text-center">
-                    {cotizacionData.vigencia.split("-").reverse().join("-")}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Estado de la Cotización:</td>
-                  <td className="text-center">{cotizacionData.estado}</td>
+                  <td>Estado de la Orden:</td>
+                  <td className="text-center">prueba</td>
                 </tr>
               </tbody>
             </table>
@@ -130,10 +241,10 @@ export const CotizacionPreview = ({
         </div>
 
         <div className="text-center m-3">
-          <h1>COTIZACIÓN</h1>
+          <h1>Orden de Trabajo</h1>
         </div>
 
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <div className="table-responsive">
             <table className="w-100 blue-table tabla-cliente text-dark">
               <thead>
@@ -144,25 +255,25 @@ export const CotizacionPreview = ({
               <tbody>
                 <tr>
                   <td>Razon social :</td>
-                  <td colSpan={3}>{cotizacionData.cliente_nombre}</td>
+                  <td colSpan={3}>p</td>
                 </tr>
                 <tr>
                   <td>Atención :</td>
-                  <td colSpan={3}>{cotizacionData.atencion}</td>
+                  <td colSpan={3}>p</td>
                 </tr>
                 <tr>
                   <td>Obra :</td>
-                  <td colSpan={3}>{cotizacionData.obra_nombre}</td>
+                  <td colSpan={3}>p</td>
                 </tr>
                 {isDesktop ? (
                   <tr>
                     <td className="col-3">Asesor Comercial:</td>
                     <td className="col-3">
-                      {cotizacionData.asesor_comercial.name}
+                      p
                     </td>
                     <td className="col-3">Correo electrónico asesor:</td>
                     <td className="col-3">
-                      {cotizacionData.asesor_comercial.email}
+                      p
                     </td>
                   </tr>
                 ) : (
@@ -170,13 +281,13 @@ export const CotizacionPreview = ({
                     <tr>
                       <td>Asesor Comercial:</td>
                       <td>
-                        {cotizacionData.asesor_comercial.name}
+                        pp
                       </td>
                     </tr>
                     <tr>
                       <td>Correo electrónico asesor:</td>
                       <td>
-                        {cotizacionData.asesor_comercial.email}
+                        ppp
                       </td>
                     </tr>
                   </>
@@ -184,262 +295,208 @@ export const CotizacionPreview = ({
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
 
-        <table className="blue-table tabla-diseños tabla-detalles-diseños w-100">
-          <thead>
-            <tr>
-              <th className="col-5">
-                <div className="d-flex justify-content-center">
-                  Diseño del Concreto
-                </div>
-              </th>
-              <th className="col-2">
-                <div className="d-flex justify-content-center">
-                  Precio Unitario
-                </div>
-              </th>
-              <th className="col-1">
-                {isDesktop ? (
-                  <div className="d-flex justify-content-center">Cantidad</div>
-                ) : (
-                  <div className="d-flex justify-content-center">Cant.</div>
-                )}
-              </th>
-              <th className="col-2">
-                <div className="d-flex justify-content-center">Unidad</div>
-              </th>
-              <th className="col-2">
-                <div className="d-flex justify-content-center">
-                  Precio Subtotal
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="table-body">
-            {cotizacionData.lineas_pedido.map((linea, i) => (
-              <tr key={i}>
-                <td>{linea.producto_detail.diseño}</td>
-                <td>{formatNumToMxnCurrency(linea.precio_unitario)}</td>
-                <td>{linea.cantidad}</td>
-                <td>{linea.unidad}</td>
-                <td>{formatNumToMxnCurrency(linea.precio_neto)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className="d-flex flex-md-row flex-column justify-content-between my-3">
-          <div className="d-flex flex-column col-12 col-md-6 text-dark">
-            <div>
-              <strong> PLAZOS Y CUENTAS BANCARIAS: </strong>
-            </div>
-            <div>
-              El pago es de Contado (1 día antes del suministro), excepto los
-              Clientes que tengan una Línea de Crédito disponible, de acuerdo a
-              lo solicitado por el Comité de Crédito.
-            </div>
-            <div>
-              Aceptamos todas las tarjetas.
-              <img src={Tarjetas} alt="tarjetas" />
-            </div>
-            <div>
-              Tramita con nosotros tu crédito
-              <img src={Credito} alt="credito" />
-            </div>
-          </div>
-          <div className="col-12 col-md-6 d-flex align-items-center order-first order-md-last">
-            <table className="col-12 blue-table text-center my-3">
-              <tbody>
-                {cotizacionData.tipo_venta === "F" && (
-                  <>
+            <div className="mb-3">
+              <div className="table-responsive">
+                <table className="w-100 blue-table tabla-cliente">
+                  <thead>
+                    {/* <tr className="text-center">
+                      <th colSpan={4}>Datos Generales del Cliente</th>
+                    </tr> */}
+                    <th className="col-4" colSpan={2}>
+                        <div className="d-flex justify-content-center">
+                          Información Unidad
+                        </div>
+                      </th>
+                      <th className="col-4" colSpan={2}>
+                        <div className="d-flex justify-content-center">
+                          Información Motor
+                        </div>
+                      </th>
+                      <th className="col-4" colSpan={2}>
+                        <div className="d-flex justify-content-center">
+                        Información Unidad
+                        </div>
+                      </th>
+                  </thead>
+                  <tbody>
                     <tr>
-                      <td className="col-6">
-                        <strong>Subtotal:</strong>
-                      </td>
-                      <td className="text-dark">
-                        {formatNumToMxnCurrency(cotizacionData.subtotal)}
-                      </td>
+                      <td className="col-2"><strong>Cliente: </strong> </td>
+                      <td className="col-2">Concreco</td>
+                      <td className="col-2"><strong>Combustible:</strong></td>
+                      <td className="col-2">Diesel</td>
+                      <td className="col-2"><strong>No. económico:</strong></td>
+                      <td className="col-2">RE-20</td>
                     </tr>
                     <tr>
-                      <td className="col-6">
-                        <strong>IVA:</strong>
-                      </td>
-                      <td className="text-dark">
-                        {formatNumToMxnCurrency(
-                          Number(cotizacionData.subtotal) * 0.16
-                        )}
+                      <td className="col-2"><strong>Operador:</strong></td>
+                      <td className="col-2">Luis Perez</td>
+                      <td className="col-2"><strong>Motor:</strong></td>
+                      <td className="col-2">RP-2000</td>
+                      <td className="col-2"><strong>Descripción:</strong></td>
+                      <td className="col-2">Retroexcavadora</td>
+                    </tr>
+                    <tr>
+                      <td className="col-2"><strong>Ubicación:</strong></td>
+                      <td className="col-2">El Calvario</td>
+                      <td className="col-2"><strong>Marca motor:</strong></td>
+                      <td className="col-2">RP-2000</td>
+                      <td className="col-2"><strong>Marca:</strong></td>
+                      <td className="col-2">CASE</td>
+                      
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="invisible-cells" ><strong></strong></td>
+                      
+                      <td className="col-2"><strong>Serie motor:</strong></td>
+                      <td className="col-2">RT-555-662</td>
+                      <td className="col-2"><strong>Modelo:</strong></td>
+                      <td className="col-2">580M</td>
+                      
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="invisible-cells" ><strong></strong></td>
+                      <td colSpan={2} className="invisible-cells" ><strong></strong></td>
+                      
+                      <td className="col-2"><strong>No. serie:</strong></td>
+                      <td className="col-2">56451DSE</td>
+                      
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="invisible-cells" ><strong></strong></td>
+                      <td colSpan={2} className="invisible-cells" ><strong></strong></td>
+                      
+                      <td className="col-2"><strong>Placas:</strong></td>
+                      <td className="col-2">TR656TR</td>
+                      
+                    </tr>
+                  
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <div className="table-responsive">
+                <table className="w-100 blue-table tabla-diseños">
+                  <thead>
+                    <tr>
+                      <th className="col-12">
+                        <div className="d-flex justify-content-center">
+                          Fallas reportadas
+                        </div>
+                      </th>
+                     
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                 
+                      <tr >
+                      
+                      <td colSpan={3}>
+                      <input
+                            type="text"
+                            className="col-12"
+                            name="busquedaString"
+                            value="Falla reportada 1"
+                            autoComplete="off"
+                           
+                          />
+                          {/* <input
+                          type="text"
+                          className="col-12"
+                          name="atencion"
+                          value={form.atencion}
+                          onChange={handleChangeForm}
+                          autoComplete="off"
+                          required
+                        /> */}
                       </td>
                     </tr>
-                  </>
-                )}
-                <tr>
-                  <td className="col-6">
-                    <strong>Total:</strong>
-                  </td>
-                  <td className="text-dark">
-                    {formatNumToMxnCurrency(cotizacionData.total)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-        <div>
-          <table className="w-100 blue-table text-center tabla-servicios">
-            <thead>
-              <tr className="text-center">
-                <th colSpan={4}>Servicios Adicionales</th>
-              </tr>
-            </thead>
-            <tbody className="tabla-servicios-body">
-              <tr>
-                <td rowSpan={5} className="col-3">
-                  Cargo por flete de vacío
-                </td>
-                <td rowSpan={5} className="col-3">
-                  Pedidos menores a 3.5m3 tendrán un cargo adicional
-                </td>
-                <td className="col-3 servicio cursor-default servicio-1">
-                  Olla c/3 m3
-                </td>
-                <td className="col-3 servicio cursor-default servicio-1">
-                  $210.00
-                </td>
-              </tr>
-              <tr>
-                <td className="servicio cursor-default servicio-2">
-                  Olla c/2.5 m3
-                </td>
-                <td className="servicio cursor-default servicio-2">$255.00</td>
-              </tr>
-              <tr>
-                <td className="servicio cursor-default servicio-3">
-                  Olla c/2 m3
-                </td>
-                <td className="servicio cursor-default servicio-3">$380.00</td>
-              </tr>
-              <tr>
-                <td className="servicio cursor-default servicio-4">
-                  Olla c/1.5 m3
-                </td>
-                <td className="servicio cursor-default servicio-4">$500.00</td>
-              </tr>
-              <tr>
-                <td className="servicio cursor-default servicio-5">
-                  Olla c/1 m3
-                </td>
-                <td className="servicio cursor-default servicio-5">$640.00</td>
-              </tr>
-              <tr>
-                <td className="col-3">Servicio de bomba pluma</td>
-                <td
-                  colSpan={2}
-                  className="col-6 servicio cursor-default servicio-6"
+            <div>
+              <div className="table-responsive">
+                <table className="w-100 blue-table tabla-diseños">
+                  <thead>
+                    <tr>
+                      <th className="col-12">
+                        <div className="d-flex justify-content-center">
+                          Fallas ecnontradas
+                        </div>
+                      </th>
+                     
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                  {diseños.map((diseño) => (
+                      <tr key={diseño.id}>
+                      
+                      <td colSpan={3}>
+                      <input
+                            type="text"
+                            className="col-12"
+                            name="busquedaString"
+                            value={diseño.busquedaString}
+                            autoComplete="off"
+                            onChange={(e) => {
+                              getDiseños(e, diseño);
+                              changeDiseñoInput(e, diseño);
+                              actualizarSubtotal(diseño);
+                            }}
+                          />
+                          {/* <input
+                          type="text"
+                          className="col-12"
+                          name="atencion"
+                          value={form.atencion}
+                          onChange={handleChangeForm}
+                          autoComplete="off"
+                          required
+                        /> */}
+                      </td>
+                    </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="mt-3 d-flex justify-content-between">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={agregarDiseño}
+              >
+                Agregar Falla
+              </button>
+              {diseños.length > 1 && (
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={eliminarDiseño}
                 >
-                  El mínimo de bombeo para un servicio es de 10m3 ($220.00 más
-                  IVA x10m3)
-                </td>
-                <td className="col-3 servicio cursor-default servicio-6">
-                  $2,200.00
-                </td>
-              </tr>
-              <tr>
-                <td>Servicio de bomba estacionaria</td>
-                <td colSpan={2} className="servicio cursor-default servicio-7">
-                  El mínimo de bombeo para un servicio es de 15m3 ($264.00 más
-                  IVA x15m3)
-                </td>
-                <td className="servicio cursor-default servicio-7">
-                  $3,959.00
-                </td>
-              </tr>
-              <tr>
-                <td>Apertura de planta fuera de horario</td>
-                <td colSpan={2} className="servicio cursor-default servicio-8">
-                  El horario de atención es de lunes a viernes de 7:00-18:00hrs
-                  y sábados de 7:00-14:00hrs. Fuera de este horario se tendrá
-                  una tarifa por hora adicional.
-                </td>
-                <td className="servicio cursor-default servicio-8">
-                  $1577.58
-                </td>
-              </tr>
-              <tr>
-                <td>Apertura de planta en día festivo de horario</td>
-                <td colSpan={2} className="servicio cursor-default servicio-9">
-                  La apertura de planta es por un volumen mínimo de 60m3
-                </td>
-                <td className="servicio cursor-default servicio-9">
-                  $8448.27
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  Eliminar Falla
+                </button>
+              )}
+            </div>
 
-        <div className="d-flex flex-md-row flex-column justify-content-between my-3 text-dark">
-          <div className="col-12 col-md-6 cotizacion-condiciones">
-            <div>
-              <strong> CONDICIONES: </strong>
-            </div>
-            <p>
-              * Precio con Cobertura de 15 Kilómetros a la redonda, según
-              ubicación de planta.
-            </p>
-            <p>
-              <strong> * Precios exclusivos para esta obra.</strong>
-            </p>
-            <p>* Cotización sujeta a cambios sin previo aviso.</p>
-            <p>
-              * El cliente dispone de máximo 30 mins para la recepción del
-              concreto a partir de la llegada del mismo a la obra, después de
-              este lapso, la empresa no se resposabiliza de las características
-              (revenimiento, resistencia, etc) del producto conforme a la norma
-              NMX C-155.
-            </p>
-            <p>
-              * Para realizar alguna cancelación y/o modificación se requiere
-              que se realice mínimo 3:30 hrs antes del suministro
-            </p>
-            <p>
-              * En caso de modificaciones al concreto en obra, adicionando
-              materia prima, agua, fibras u otros elementos, la empresa no se
-              hace responsable del comportamiento del concreto.
-            </p>
-          </div>
-          <div className="col-12 col-md-6 d-flex align-items-center">
-            <div>
-              <div className="my-3">
-                <strong>
-                  En espera de vernos favorecidos con su preferencia me despido
-                  quedando a sus órdenes para cualquier duda o aclaración.
-                </strong>
-              </div>
-              <div className="mt-3">
-                <div>
-                  <strong>Asesor comercial: </strong>
-                  {cotizacionData.is_ventas
-                    ? cotizacionData.vendedor
-                    : "Administración"}
-                </div>
-                <div>
-                  <strong>Contacto: </strong>
-                  {cotizacionData.asesor_comercial.email}
-                </div>
-                <div>
-                  <strong>Razón social: </strong>
-                  {cotizacionData.cliente_nombre}
-                </div>
-                <div>
-                  <strong>Atención: </strong>
-                  {cotizacionData.atencion}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
+
+        
+
+     
+
+        
+        
+
+        
       </div>
     </div>
   );

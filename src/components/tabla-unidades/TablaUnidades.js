@@ -143,7 +143,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
               >
                 <td>
                   <Link
-                    to={ `/unidades/unidad/${unidad.id}`
+                    to={ `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                     {unidad.numero_economico}
@@ -159,7 +159,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
                     //     ? `/concreco/produccion/pedido/${pedido.id}`
                     //     : pathname.includes("dashboard") &&
                     //       `/concreco/dashboard/pedido/${pedido.id}`
-                    `/unidades/unidad/${unidad.id}`
+                    `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                     {unidad.nombre}
@@ -168,7 +168,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
                 <td>
                   <Link
                     to={
-                    `/unidades/unidad/${unidad.id}`
+                    `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                     {unidad.categoria}
@@ -178,7 +178,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
                 <td>
                   <Link
                     to={
-                    `/unidades/unidad/${unidad.id}`
+                    `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                     {unidad.familia}
@@ -188,7 +188,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
                 <td>
                   <Link
                     to={
-                    `/unidades/unidad/${unidad.id}`
+                    `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                     {unidad.subfamilia}
@@ -198,7 +198,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
                 <td>
                   <Link
                     to={
-                    `/unidades/unidad/${unidad.id}`
+                    `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                      {unidad.marca}
@@ -208,7 +208,7 @@ export const TablaUnidades = ({ unidades, setUnidades }) => {
                 <td>
                   <Link
                     to={
-                    `/unidades/unidad/${unidad.id}`
+                    `/ordenes-trabajo/unidades-orden/${unidad.id}`
                     }
                   >
                     {unidad.modelo}

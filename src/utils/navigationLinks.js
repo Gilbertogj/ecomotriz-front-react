@@ -3,8 +3,8 @@ const BASE_URL = "";
 export const userTypeLinks = {
   Administracion: [
     {
-      text: "Unidades",
-      link: `${BASE_URL}/unidades`,
+      text: "Órdenes de Trabajo",
+      link: `${BASE_URL}/ordenes-trabajo`,
       id: 1,
     },
    
@@ -65,6 +65,66 @@ export const userTypeLinks = {
     },
   ],
 };
+
+export const ordenesTrabajoLinks = {
+  Administracion: [
+    // {
+    //   text: "Lista de Clientes",
+    //   link: `${BASE_URL}/unidades/clientes`,
+    //   id: 1,
+    // },
+    {
+      text: "Lista de Órdenes de Trabajo",
+      link: `${BASE_URL}/ordenes-trabajo/lista`,
+      id: 1,
+    },
+
+    {
+      text: "Nueva Orden de Trabajo",
+      link: `${BASE_URL}/ordenes-trabajo/unidades-orden`,
+      id: 2,
+    },
+    
+  ],
+
+  Ventas: [
+    {
+      text: "Lista de Clientes",
+      link: `${BASE_URL}/logistica/clientes`,
+      id: 1,
+    },
+    {
+      text: "Lista de Pedidos",
+      link: `${BASE_URL}/logistica/pedidos`,
+      id: 2,
+    },
+    {
+      text: "Realizar Pedido",
+      link: `${BASE_URL}/logistica/clientes-pedido`,
+      id: 3,
+    },
+  ],
+
+  Produccion: [
+    {
+      text: "Lista de Clientes",
+      link: `${BASE_URL}/logistica/clientes`,
+      id: 1,
+    },
+    {
+      text: "Lista de Pedidos",
+      link: `${BASE_URL}/logistica/pedidos`,
+      id: 2,
+    },
+    {
+      text: "Realizar Pedido",
+      link: `${BASE_URL}/logistica/clientes-pedido`,
+      id: 3,
+    },
+  ],
+};
+
+
 
 export const produccionMenuUserTypeLinks = {
   Dosificador: [
@@ -250,3 +310,5 @@ export const facturacionLinks = [
   },
   
 ];
+
+
