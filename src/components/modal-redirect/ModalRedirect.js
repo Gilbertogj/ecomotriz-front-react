@@ -29,7 +29,7 @@ export const ModalRedirect = ({ showConfirmModal, text, link }) => {
           </Modal.Body>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={redirect}>
+          <Button variant="success" onClick={redirect}>
             Continuar
           </Button>
         </Modal.Footer>

@@ -39,7 +39,7 @@ export const LoginForm = () => {
       
       // const resp = await apiConcrecoUsers.post('/login/', body)
       const resp = await fetch(
-        process.env.REACT_APP_ACTIVOS_BACKEND_URL + "/api/core/login/",
+        "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/auth-token/",
         {
           method: "POST",
           headers: {

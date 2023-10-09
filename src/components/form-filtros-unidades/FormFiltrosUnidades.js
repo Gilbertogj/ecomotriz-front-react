@@ -8,7 +8,7 @@ import React, {
 import { useLocation } from "react-router-dom";
 import { ReactReduxContext } from "../../context/reactReduxContext";
 import { setCurrentUser } from "../../redux/user/userSlice";
-import { fetchData } from "../../utils/fetchData";
+import { fetchDataWithoutAuthentication } from "../../utils/fetchDataWithoutAuthentication";
 
 import { MyDatepicker } from "../my-datepicker/MyDatepicker";
 import { CustomSelect } from "../custom-select/CustomSelect";
@@ -181,6 +181,8 @@ export const FormFiltrosUnidades = ({
         <option value="Generadores">Generadores</option>
         <option value="Retroexcavadora con cargador">Retroexcavadora con cargador</option>
         <option value="Aditamentos">Aditamentos</option>
+        <option value="Motoconformadoras">Motoconformadoras</option>
+        <option value="Torres de iluminación">Torres de iluminación</option>
         `;
             
         }else if (e.target.value === "Logística") {
@@ -190,6 +192,12 @@ export const FormFiltrosUnidades = ({
         <option value="Góndola (30m3)">Góndola (30m3)</option>
         <option value="Remolque">Remolque</option>
         <option value="Dolly">Dolly</option>
+        <option value="Torton 14m3">Torton 14m3</option>
+        <option value="Volteo 7m3">Volteo 7m3</option>
+        <option value="Remolque">Remolque</option>
+        <option value="Lowboy cama alta">Lowboy cama alta</option>
+        <option value="Lowboy cama baja">Lowboy cama baja</option>
+        <option value="Pipas">Pipas</option>
         `;
         }else if (e.target.value === "Carga y manipulación") {
           document.querySelector("#familia").innerHTML = `
@@ -250,6 +258,7 @@ export const FormFiltrosUnidades = ({
       <option value="Rodillo vibratorio doble">Rodillo vibratorio doble</option>
       <option value="Rodillo neumático">Rodillo neumático</option>
       <option value="Mini compactador">Mini compactador</option>
+      <option value="Duo Pactor">Duo Pactor</option>
       `;
       setForm({
         ...form,
@@ -265,6 +274,7 @@ export const FormFiltrosUnidades = ({
       <option value=""></option>
       <option value="Martillos hidráulicos">Martillos hidráulicos</option>
       <option value="Barredoras">Barredoras</option>
+      <option value="Bote para retroexcavadora">Bote para retroexcavadora</option>
       `;
       setForm({
         ...form,
@@ -342,6 +352,21 @@ export const FormFiltrosUnidades = ({
         });
   
         subFamiliaRef.current.disabled = false;
+      }
+      else if (e.target.value === "Pipas") {
+        document.querySelector("#subfamilia").innerHTML = `
+        <option value=""></option>
+        <option value="Agua 10,000 lts.">Agua 10,000 lts.</option>
+        <option value="Agua 20,000 lts.">Agua 20,000 lts.</option>
+        <option value="Diésel 5,000 lts.">Diésel 5,000 lts.</option>
+        `;
+        setForm({
+          ...form,
+          familia:familiaUnidadRef.current.value,
+          subfamilia:subFamiliaRef.current.value,
+        });
+  
+        subFamiliaRef.current.disabled = false;
       }else{
         setForm({
           ...form,
@@ -390,8 +415,8 @@ export const FormFiltrosUnidades = ({
         fechaIntervalo = `${fechaInicio}/${fechaFinal}`;
       }
 
-      const fetchedData = await fetchData(
-        `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/?&fecha_intervalo=${fechaIntervalo}&categoria=${form.categoria}&familia=${form.familia
+      const fetchedData = await fetchDataWithoutAuthentication(
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/assets/?&fecha_intervalo=${fechaIntervalo}&categoria=${form.categoria}&familia=${form.familia
         }&subfamilia=${form.subfamilia}`,
         authtoken,
         dispatch,

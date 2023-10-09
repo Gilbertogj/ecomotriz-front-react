@@ -1,0 +1,29 @@
+
+        /* Define un estilo CSS para los círculos */
+        .contenedor-circulo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0px; /* Espacio vertical reducido entre los elementos */
+        }
+
+        .circulo {
+            width: 20px; /* Tamaño del círculo reducido a 20px */
+            height: 20px;
+            border-radius: 50%; /* Esto hace que el elemento sea un círculo */
+            margin-right: 10px; /* Espacio entre el círculo y el nombre */
+          
+        }
+
+        /* Estilos específicos para cada círculo */
+        .verde {
+            background-color: #eccccf;
+        }
+
+        .rojo {
+            background-color: #f2e7c3;
+        }
+
+        .amarillo {
+            
+            background-color: #c7dbd2;
+        }

@@ -11,9 +11,10 @@ import { TablaOrdenesTrabajo } from "../../components/tabla-ordenes-trabajo/Tabl
 import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner";
 import { FormFiltrosUnidades } from "../../components/form-filtros-unidades/FormFiltrosUnidades";
 import { BotonesPaginacionTablas } from "../../components/botones-paginacion-tablas/BotonesPaginacionTablas";
+import "./ListaOrdenesTrabajoPage.styles.scss";
 
 // const formInitialState = {
-//     status: "",
+//   empresa_alta: "",
 //     empresa_responsable: "",
 //     categoria: "",
 //     familia: "",
@@ -21,14 +22,14 @@ import { BotonesPaginacionTablas } from "../../components/botones-paginacion-tab
    
 //   };
 
-export const ListaOrdenesTrabajoPage = () => {
-  const [unidades, setUnidades] = useState(null);
+export const ListaOrdenesTrabajoPage  = () => {
+  const [ordenes, setOrdenes] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [finalPage, setFinalPage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-//   const [filtrosAplicadosUnidades, setFiltrosAplicadosUnidades] =
-//     useState(formInitialState);
-//     const [totalUnidades, setTotalUnidades] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  // const [filtrosAplicadosUnidades, setFiltrosAplicadosUnidades] =
+  //   useState(formInitialState);
+  //   const [totalUnidades, setTotalUnidades] = useState(null);
 
 
 
@@ -39,67 +40,79 @@ export const ListaOrdenesTrabajoPage = () => {
   const { authtoken, dispatch, setCurrentUser, userRol } =
     useContext(ReactReduxContext);
 
-//   useEffect(() => {
-//     fetchUnidades(`${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/`);
-//   }, [authtoken]);
-  
+  useEffect(() => {
+    fetchUnidades(`https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/`);
+  }, [authtoken]);
+  // console.log(authtoken);
 
   const fetchUnidades = async (url) => {
     setIsLoading(true);
     const data = await fetchData(url ,authtoken, dispatch, setCurrentUser);
-    setUnidades(data.results);
+    setOrdenes(data.results);
     setFinalPage(Math.ceil(data.count / 10));
 
     setIsLoading(false);
   
   };
 
+  const changePage = (num) => {
+    const newCurrentPage = currentPage + num;
+
+    fetchUnidades(
+      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/?page=${newCurrentPage}`
+    );
+
+    setCurrentPage(newCurrentPage);
+  };
+
   // const changePage = (num) => {
   //   const newCurrentPage = currentPage + num;
 
   //   fetchUnidades(
-  //     `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/?search=${
-  //       busquedaAplicada ? busquedaAplicada : ""
-  //     }&page=${newCurrentPage}`
+  //     `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/assets/?empresa_alta=${
+  //       filtrosAplicadosUnidades.empresa_alta ? filtrosAplicadosUnidades.empresa_alta : ""
+  //     }&fecha_intervalo=${
+  //       fechasFiltroAplicados ? fechasFiltroAplicados : ""
+  //     }&categoria=${
+  //       filtrosAplicadosUnidades.categoria
+  //         ? filtrosAplicadosUnidades.categoria
+  //         : ""
+  //     }&familia=${
+  //       filtrosAplicadosUnidades.familia ? filtrosAplicadosUnidades.familia : ""
+  //     }&subfamilia=${
+  //       filtrosAplicadosUnidades.subfamilia ? filtrosAplicadosUnidades.subfamilia : ""
+  //     }&search=${busquedaAplicada ? busquedaAplicada : ""}&page=${newCurrentPage}`
   //   );
 
   //   setCurrentPage(newCurrentPage);
   // };
-
-//   const changePage = (num) => {
-//     const newCurrentPage = currentPage + num;
-
-//     fetchUnidades(
-//       `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/?empresa_alta=${
-//         filtrosAplicadosUnidades.empresa_alta ? filtrosAplicadosUnidades.empresa_alta : ""
-//       }&fecha_intervalo=${
-//         fechasFiltroAplicados ? fechasFiltroAplicados : ""
-//       }&categoria=${
-//         filtrosAplicadosUnidades.categoria
-//           ? filtrosAplicadosUnidades.categoria
-//           : ""
-//       }&familia=${
-//         filtrosAplicadosUnidades.familia ? filtrosAplicadosUnidades.familia : ""
-//       }&subfamilia=${
-//         filtrosAplicadosUnidades.subfamilia ? filtrosAplicadosUnidades.subfamilia : ""
-//       }&search=${busquedaAplicada ? busquedaAplicada : ""}&page=${newCurrentPage}`
-//     );
-
-//     setCurrentPage(newCurrentPage);
-//   };
 
   return (
     <Container style={{ maxWidth: "100%", maxHeight: "100%" }}>
       <Row className="text-center mb-3">
         <h3 className="m-0">Lista de Órdenes de Trabajo</h3>
       </Row>
+      
+
+      <div class="contenedor-circulo">
+        <div class="circulo verde"></div>
+        <span>No atendida</span>
+    </div>
+    <div class="contenedor-circulo">
+        <div class="circulo rojo"></div>
+        <span>En proceso</span>
+    </div>
+    <div class="contenedor-circulo">
+        <div class="circulo amarillo"></div>
+        <span>Cerrada</span>
+    </div>
 
       {/* {userRol !== "Operador" && (
         <Row className="mb-3 justify-content-center">
           <div className="col-12 col-sm-7">
             <SearchInput
-              unidades={unidades}
-              setUnidades={setUnidades}
+              ordenes={ordenes}
+              setOrdenes={setOrdenes}
               setCurrentPage={setCurrentPage}
               setFinalPage={setFinalPage}
              
@@ -117,7 +130,7 @@ export const ListaOrdenesTrabajoPage = () => {
       {/* {userRol !== "Operador" && ( 
          <FormFiltrosUnidades
           setFiltrosAplicadosUnidades={setFiltrosAplicadosUnidades}
-          setUnidades={setUnidades}
+          setOrdenes={setOrdenes}
           
           setTotalUnidades={setTotalUnidades}
           setIsLoading={setIsLoading}
@@ -145,14 +158,13 @@ export const ListaOrdenesTrabajoPage = () => {
               </div>
             </div>
           )} */}
-          <TablaOrdenesTrabajo unidades={unidades} setUnidades={setUnidades} />
-          
-          {/* <BotonesPaginacionTablas
+          <TablaOrdenesTrabajo ordenes={ordenes} setOrdenes={setOrdenes} />
+          <BotonesPaginacionTablas
             currentPage={currentPage}
             finalPage={finalPage}
             changePage={changePage}
             
-          /> */}
+          />
         </Row>
       )}
     </Container>

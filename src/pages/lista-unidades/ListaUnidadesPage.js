@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
 import { ReactReduxContext } from "../../context/reactReduxContext";
-import { fetchData } from "../../utils/fetchData";
+import { fetchDataWithoutAuthentication } from "../../utils/fetchDataWithoutAuthentication";
 
 import { SearchInput } from "../../components/search-input/SearchInput";
 import { TablaUnidades } from "../../components/tabla-unidades/TablaUnidades";
@@ -40,13 +40,13 @@ export const ListaUnidadesPage = () => {
     useContext(ReactReduxContext);
 
   useEffect(() => {
-    fetchUnidades(`${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/`);
+    fetchUnidades(`https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/assets/`);
   }, [authtoken]);
   // console.log(authtoken);
 
   const fetchUnidades = async (url) => {
     setIsLoading(true);
-    const data = await fetchData(url ,authtoken, dispatch, setCurrentUser);
+    const data = await fetchDataWithoutAuthentication(url ,authtoken, dispatch, setCurrentUser);
     setUnidades(data.results);
     setFinalPage(Math.ceil(data.count / 10));
 
@@ -70,7 +70,7 @@ export const ListaUnidadesPage = () => {
     const newCurrentPage = currentPage + num;
 
     fetchUnidades(
-      `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/?empresa_alta=${
+      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/assets/?empresa_alta=${
         filtrosAplicadosUnidades.empresa_alta ? filtrosAplicadosUnidades.empresa_alta : ""
       }&fecha_intervalo=${
         fechasFiltroAplicados ? fechasFiltroAplicados : ""

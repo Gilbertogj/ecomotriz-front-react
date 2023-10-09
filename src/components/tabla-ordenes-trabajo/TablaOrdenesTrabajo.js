@@ -7,8 +7,8 @@ import { setCurrentUser } from "../../redux/user/userSlice";
 
 import { SuccessModal } from "../success-modal/SuccessModal";
 
-export const TablaOrdenesTrabajo = ({ unidades, setUnidades }) => {
-//   console.log(unidades);
+export const TablaOrdenesTrabajo = ({ ordenes, setOrdenes }) => {
+  console.log(ordenes);
   const [show, setShow] = useState(false);
 
   const { pathname } = useLocation();
@@ -92,33 +92,39 @@ export const TablaOrdenesTrabajo = ({ unidades, setUnidades }) => {
 
   return (
     <>
-      {/* <SuccessModal
+      <SuccessModal
         show={show}
         handleClose={handleClose}
         title="Pedido actualizado"
-      /> */}
+      />
       <div className="table-responsive p-0">
         <Table striped bordered hover className="text-center">
           <thead>
-            
             <tr>
-              <th>Estatus</th>
+            <th>Estatus</th>
               <th>Folio O.T.</th>
               <th>Fecha</th>
               <th>Cliente</th>
               <th>Número económico</th>
-              <th>Falla</th>
               
-             
-            
              
             </tr>
           </thead>
           <tbody>
-            {/* {unidades.map((unidad) => ( */}
+            {ordenes.map((orden) => (
               <tr
-                // key={unidad.id}
-                className="table-row"
+                key={orden.id}
+
+                className={`${
+                
+                     orden.status === "Closed"
+                        ? "table-success"
+                        :  orden.status === "Open"
+                        ? "table-danger"
+                      : "table-warning"
+                   
+                }`}
+                // className="table-row"
                 
                 // {`${
                 //   pathname.includes("logistica")
@@ -146,77 +152,63 @@ export const TablaOrdenesTrabajo = ({ unidades, setUnidades }) => {
               >
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${1}`
+                    to={ `/ordenes-trabajo/orden/${orden.id}`
                     }
                   >
-                    {/* {unidad.numero_economico} */}
-                    {"prueba"}
+                    {orden.status == "Open" ? "No atendida": orden.status == "Closed" ? "Cerrada": "En proceso"}
              
                   </Link>
                 </td>
                 <td>
                   <Link
-                    // to={
-                    // //   pathname.includes("logistica")
-                    // //     ? `/concreco/logistica/pedido/${pedido.id}`
-                    // //     : pathname.includes("produccion")
-                    // //     ? `/concreco/produccion/pedido/${pedido.id}`
-                    // //     : pathname.includes("dashboard") &&
-                    // //       `/concreco/dashboard/pedido/${pedido.id}`
-                    // `/unidades/unidad/${unidad.id}`
-                    // }
-
-                    to={ `/ordenes-trabajo/orden/${1}`
+                    to={ `/ordenes-trabajo/orden/${orden.id}`
                     }
                   >
-                    {/* {unidad.numero_economico} */}
-                    {"prueba"}
+                    {orden.folio}
+             
                   </Link>
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${1}`
-                  }
+                    to={ `/ordenes-trabajo/orden/${orden.id}`
+                    }
                   >
-                    {/* {unidad.numero_economico} */}
-                    {"prueba"}
-                   
+                    {orden.created_at
+                        .slice(0, 10)
+                        .split("-")
+                        .reverse()
+                        .join("-")} 
+                        {/* <br></br> */}
+                        {" "}
+                    {orden.created_at.slice(11, 16)} 
+
+             
                   </Link>
                 </td>
+
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${1}`
-                  }
+                    to={ `/ordenes-trabajo/orden/${orden.id}`
+                    }
                   >
-                    {/* {unidad.numero_economico} */}
-                    {"prueba"}
-                  
+                    {orden.asset_data.empresa}
+             
                   </Link>
                 </td>
+
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${1}`
-                  }
+                    to={ `/ordenes-trabajo/orden/${orden.id}`
+                    }
                   >
-                    {/* {unidad.numero_economico} */}
-                    {"prueba"}
-                  
+                    {orden.asset_data.numero_economico}
+             
                   </Link>
                 </td>
-                <td>
-                  <Link
-                    to={ `/ordenes-trabajo/orden/${1}`
-                  }
-                  >
-                     {/* {unidad.numero_economico} */}
-                    {"prueba"}
-                   
-                  </Link>
-                </td>
-                
+               
                 
               </tr>
-            {/* ))} */}
+            ))}
           </tbody>
         </Table>
       </div>

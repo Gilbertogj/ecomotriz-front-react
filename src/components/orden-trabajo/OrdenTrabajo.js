@@ -5,7 +5,7 @@ import { ReactReduxContext } from "../../context/reactReduxContext";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { setCurrentUser } from "../../redux/user/userSlice";
 import { formatNumToMxnCurrency } from "../../utils/formatNumToMxnCurrency";
-import { fetchData } from "../../utils/fetchData";
+import { fetchDataWithoutAuthentication } from "../../utils/fetchDataWithoutAuthentication";
 
 import { CotizacionModal } from "../cotizacion-modal/CotizacionModal";
 import { ModalRedirect } from "../modal-redirect/ModalRedirect";
@@ -19,45 +19,50 @@ import Credito from "../../assets/img/credito.png";
 import "./OrdenTrabajo.styles.scss";
 
 const initialState = {
+  asset: "",
+  status: "",
   folio: "",
-  vigencia: "",
-  atencion: "",
-  subtotal: "",
-  total: "",
-  cliente: "",
-  obra: "",
-  lineas: "",
-  cantidad: "",
-  servicios: "",
-  ciudad: "",
-  fiscal:"",
-  observasiones:"",
+  deadline: "",
+  estimated_delivery_date: "",
+  location: "",
+  reported_fault_lines: "",
+
 };
 
-const diseñosInitialState = [
+const fallasInitialState = [
   {
     id: 1,
-    busquedaString: "",
-    nombre: "",
-    precioUnitario: "",
-    cantidad: "",
-    diseñosData: [],
-    precios: [],
-    subtotal: "",
-    producto: "",
-    unidad: "",
-    estado:"",
+    fallaReportada: "",
+
   },
 ];
 
-const IVA = 0.16;
+// const diseñosInitialState = [
+//   {
+//     id: 1,
+//     busquedaString: "",
+//     nombre: "",
+//     precioUnitario: "",
+//     cantidad: "",
+//     diseñosData: [],
+//     precios: [],
+//     subtotal: "",
+//     producto: "",
+//     unidad: "",
+//     estado:"",
+//   },
+// ];
+
+
 
 export const OrdenTrabajo = () => {
   const [form, setForm] = useState(initialState);
+  const [unidadData, setUnidadData] = useState({});
   const [obraData, setObraData] = useState({});
   const [show, setShow] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [diseños, setDiseños] = useState(diseñosInitialState);
+  // const [diseños, setDiseños] = useState(diseñosInitialState);
+  const [fallas, setFallas] = useState(fallasInitialState);
   const [sumaSubTotales, setSumaSubTotales] = useState(0);
   const [ivaTotal, setIvaTotal] = useState(0);
   const [total, setTotal] = useState(0);
@@ -71,74 +76,30 @@ export const OrdenTrabajo = () => {
   const precioUnitarioSelectRef = useRef();
   const vigenciaRef = useRef();
 
-  const { obraId } = useParams();
+  const { id } = useParams();
 
   const isDesktop = useIsDesktop();
 
   const fechaHoy = new Date();
-  const fechaVigencia = new Date();
-  fechaVigencia.setDate(fechaHoy.getDate() + 28);
 
   useEffect(() => {
-    setSumaSubTotales(
-      diseños.reduce((accu, diseño) => {
-        return Number(accu) + Number(diseño.subtotal);
-      }, 0)
-    );
-  }, [diseños]);
+    (async () => {
+      const fetchedData = await fetchDataWithoutAuthentication(
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/assets/${id}/`,
+        authtoken,
+        dispatch,
+        setCurrentUser
+      );
 
-  useEffect(() => {
-    if (clientePagoF) {
-      setIvaTotal(sumaSubTotales * IVA);
-    }
-  }, [sumaSubTotales]);
-
-  useEffect(() => {
-    setTotal(ivaTotal + sumaSubTotales);
-  }, [ivaTotal, sumaSubTotales]);
-
-  // const handleClose = () => {
-  //   setForm({
-  //     ...form,
-  //     ciudad: modalSelectRef.current.value,
-  //     fiscal: modalSelectFiscalRef.current.value,
-  //   });
-  //   if (modalSelectFiscalRef.current.value === "F") {
-  //     setClientePagoF(true);
-  //   }
-    
-  //   console.log(modalSelectFiscalRef.current.value);
-  //   setShow(false);
-  // };
-  
-  // useEffect(() => {
-  //   (async () => {
-  //     const fetchedData = await fetchData(
-  //       `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api/obras/${obraId}/`,
-  //       authtoken,
-  //       dispatch,
-  //       setCurrentUser
-  //     );
-
-  //     // if (fetchedData.cliente_detail.pago === "F") {
-  //     //   setClientePagoF(true);
-  //     // }
+      // if (fetchedData.cliente_detail.pago === "F") {
+      //   setClientePagoF(true);
+      // }
       
-  //     // console.log(form.fiscal);
+      // console.log(form.fiscal);
 
-  //     setObraData(fetchedData);
-  //   })();
-  // }, []);
-
-  // const handleClose = () => {
-  //   setForm({
-  //     ...form,
-  //     ciudad: modalSelectRef.current.value,
-  //     fiscal: modalSelectFiscalRef.current.value
-  //   });
-  //   // console.log(modalSelectFiscalRef.current.value);
-  //   setShow(false);
-  // };
+      setUnidadData(fetchedData);
+    })();
+  }, []);
 
   const handleChangeForm = (e) => {
     const { name, value } = e.target;
@@ -149,88 +110,11 @@ export const OrdenTrabajo = () => {
     });
   };
 
-  const getDiseños = async (e, diseñoRef) => {
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        precios: [],
-      };
-
-      return arr;
-    });
-
-    const url = `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/productos/?ubicacion=${form.ciudad}&diseño=${e.target.value}`;
-
-    let data = await fetch(url, {
-      headers: {
-        Authorization: `Token ${authtoken}`,
-      },
-    });
-
-    let json = await data.json();
-
-    if (json.expired) {
-      dispatch(setCurrentUser({ token: json.token }));
-
-      data = await fetch(url, {
-        headers: {
-          Authorization: `Token ${json.token}`,
-        },
-      });
-
-      json = await data.json();
-    }
-
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        diseñosData: json.results,
-      };
-
-      return arr;
-    });
-  };
-
-  const actualizarSubtotal = (diseñoRef) => {
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        subtotal:
-          prevState[diseñoRef.id - 1].precioUnitario &&
-          prevState[diseñoRef.id - 1].cantidad &&
-          Number(prevState[diseñoRef.id - 1].precioUnitario) *
-            Number(prevState[diseñoRef.id - 1].cantidad),
-      };
-
-      return arr;
-    });
-  };
-
   const changeDiseñoInput = (e, diseñoRef) => {
-    setDiseños((prevState) => {
+    setFallas((prevState) => {
       const arr = [...prevState];
 
-      if (e.target.name === "busquedaString") {
-        arr[diseñoRef.id - 1] = {
-          ...arr[diseñoRef.id - 1],
-          precioUnitario: "",
-          nombre: "",
-          producto: "",
-        };
-      }
-
-      if (e.target.name === "nombre") {
-        arr[diseñoRef.id - 1] = {
-          ...arr[diseñoRef.id - 1],
-          precioUnitario: "",
-        };
-      }
+    
 
       arr[diseñoRef.id - 1] = {
         ...arr[diseñoRef.id - 1],
@@ -241,110 +125,98 @@ export const OrdenTrabajo = () => {
     });
   };
 
-  const agregarDiseño = () => {
-    setDiseños((prevState) => {
+  const agregarFalla = () => {
+    setFallas((prevState) => {
       const newArr = [...prevState];
 
       newArr.push({
-        id: diseños.length + 1,
-        busquedaString: "",
-        nombre: "",
-        precioUnitario: "",
-        cantidad: "",
-        diseñosData: [],
-        precios: [],
-        subtotal: "",
-        producto: "",
-        unidad: "",
+        id: fallas.length + 1,
+        fallaReportada: "",
       });
 
       return newArr;
     });
   };
 
-  const eliminarDiseño = () => {
-    setDiseños((prevState) => {
+
+
+  console.log(fallas);
+  const eliminarFalla = () => {
+    setFallas((prevState) => {
       const newArr = [...prevState];
       newArr.pop();
       return newArr;
     });
   };
 
-  const handleClickServicio = (claseDeServicio) => {
-    const elem = document.querySelectorAll(`.${claseDeServicio}`);
 
-    elem.forEach((e) => {
-      e.classList.toggle("servicio-activo");
-    });
+  // const agregarDiseño = () => {
+  //   setDiseños((prevState) => {
+  //     const newArr = [...prevState];
 
-    const numeroDeServicio = Number(
-      claseDeServicio[claseDeServicio.length - 1]
-    );
+  //     newArr.push({
+  //       id: diseños.length + 1,
+  //       busquedaString: "",
+  //       nombre: "",
+  //       precioUnitario: "",
+  //       cantidad: "",
+  //       diseñosData: [],
+  //       precios: [],
+  //       subtotal: "",
+  //       producto: "",
+  //       unidad: "",
+  //     });
 
-    if (elem[0].classList.contains("servicio-activo")) {
-      if (!servicios.includes(numeroDeServicio)) {
-        setServicios((prevState) => {
-          const newArr = [...prevState];
-          newArr.push(numeroDeServicio);
-          return newArr;
-        });
-      }
-    } else {
-      setServicios((prevState) => {
-        const newArr = [...prevState];
-        return newArr.filter((num) => num !== numeroDeServicio);
-      });
-    }
-  };
+  //     return newArr;
+  //   });
+  // };
+
+  // const eliminarDiseño = () => {
+  //   setDiseños((prevState) => {
+  //     const newArr = [...prevState];
+  //     newArr.pop();
+  //     return newArr;
+  //   });
+  // };
+
+
+
 
   const handleSumbit = async (e) => {
     e.preventDefault();
 
-    servicios.sort((a, b) => a - b);
+    
 
-    const fechaVigenciaFormatted = `${fechaVigencia.getFullYear()}-${String(
-      fechaVigencia.getMonth() + 1
-    ).padStart(2, 0)}-${fechaVigencia.getDate()}`;
+  
 
     const fechaFiltroFormatted = `${fechaHoy.getFullYear()}-${String(
       fechaHoy.getMonth() + 1
     ).padStart(2, 0)}-${fechaHoy.getDate()}`;
 
-    const formattedDiseños = [];
+    const formattedFallas = [];
 
-    diseños.forEach((diseño) => {
+    fallas.forEach((falla) => {
       const obj = {
-        cantidad: diseño.cantidad,
-        diseño: diseño.nombre,
-        precio_neto: Number(diseño.subtotal.toFixed(2)),
-        precio_unitario: diseño.precioUnitario,
-        producto: diseño.producto,
-        unidad: diseño.unidad,
+        fault: falla.fallaReportada,
+
       };
 
-      formattedDiseños.push(obj);
+      formattedFallas.push(obj);
+      // console.log(formattedFallas);
     });
 
     const dict_data = {
-      atencion: form.atencion,
-      cantidad: 1,
-      cliente: String(obraData.cliente),
-      folio: undefined,
-      obra: String(obraData.id),
-      servicios: servicios.length > 0 ? servicios : [10],
-      subtotal: sumaSubTotales.toFixed(2),
-      total: total.toFixed(2),
-      vigencia: fechaVigenciaFormatted,
-      lineas: formattedDiseños,
+      location: form.location,
+      status: "Open",
+      asset: String(unidadData.id),
+      // folio: undefined, 
+      estimated_delivery_date: form.estimated_delivery_date,
+      reported_fault_lines: formattedFallas,
       // tipo_venta: obraData.cliente_detail.pago,
-      tipo_venta: form.fiscal,
-      fecha_filtro: fechaFiltroFormatted,
-      observasiones: form.observasiones,
-      estado:"Aprobada",
     };
 
     let data = await fetch(
-      process.env.REACT_APP_API_CONCRECO_BACKEND_URL + "/api_comercializacion/cotizaciones/",
+      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/",
       {
         method: "POST",
         headers: {
@@ -355,13 +227,15 @@ export const OrdenTrabajo = () => {
       }
     );
 
+    // console.log(dict_data);
+
     let json = await data.json();
 
     if (json.expired) {
       dispatch(setCurrentUser({ token: json.token }));
 
       data = await fetch(
-        process.env.REACT_APP_API_CONCRECO_BACKEND_URL + "/api_comercializacion/cotizaciones/",
+        "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/",
         {
           method: "POST",
           headers: {
@@ -390,12 +264,12 @@ export const OrdenTrabajo = () => {
 
   return (
     <>
-      
+        {unidadData.id && (
         <div className="cotizacion-container">
           <ModalRedirect
             showConfirmModal={showConfirmModal}
-            text="Se ha creado correctamente la cotización."
-            link={`/concreco/comercializacion/cotizaciones`}
+            text="Se ha creado correctamente la Orden de Trabajo"
+            link={`/ordenes-trabajo/lista`}
           />
           <form onSubmit={handleSumbit}>
             <div className="cotizacion-header-container">
@@ -436,19 +310,23 @@ export const OrdenTrabajo = () => {
                         />
                       </td>
                     </tr>
-                    {/* <tr>
-                      <td>Vigencia de cotización:</td>
-                      <td>
+                    <tr>
+                      <td>Fecha estimada de entrega:</td>
+                      
                         <input
-                          type="text"
-                          readOnly
-                          value={fechaVigencia
-                            .toLocaleDateString()
-                            .replaceAll("/", "-")}
-                          ref={vigenciaRef}
+                          id="fechaPedido"
+                          type="date"
+                          name="estimated_delivery_date"
+                          onChange={handleChangeForm}
+                         
+                          value={form.estimated_delivery_date}
+                          className="form-control"
+                          required
                         />
-                      </td>
-                    </tr> */}
+
+                      
+                    </tr>
+          
                   </tbody>
                 </table>
               </div>
@@ -483,36 +361,45 @@ export const OrdenTrabajo = () => {
                   <tbody>
                     <tr>
                       <td className="col-2"><strong>Cliente: </strong> </td>
-                      <td className="col-2">Concreco</td>
+                      <td className="col-2">{unidadData.empresa}</td>
                       <td className="col-2"><strong>Combustible:</strong></td>
-                      <td className="col-2">Diesel</td>
+                      <td className="col-2">{unidadData.tipo_combustible}</td>
                       <td className="col-2"><strong>No. económico:</strong></td>
-                      <td className="col-2">RE-20</td>
+                      <td className="col-2">{unidadData.numero_economico}</td>
                     </tr>
                     <tr>
                       <td className="col-2"><strong>Operador:</strong></td>
-                      <td className="col-2">Luis Perez</td>
+                      <td className="col-2">{unidadData.transito.operador}</td>
                       <td className="col-2"><strong>Motor:</strong></td>
-                      <td className="col-2">RP-2000</td>
+                      <td className="col-2">{unidadData.modelo_motor}</td>
                       <td className="col-2"><strong>Descripción:</strong></td>
-                      <td className="col-2">Retroexcavadora</td>
+                      <td className="col-2">{unidadData.nombre}</td>
                     </tr>
                     <tr>
                       <td className="col-2"><strong>Ubicación:</strong></td>
-                      <td className="col-2">El Calvario</td>
+                      <td className="col-2">
+                        <input
+                          type="text"
+                          className="col-12"
+                          name="location"
+                          value={form.location}
+                          onChange={handleChangeForm}
+                          autoComplete="off"
+                          required
+                        /></td>
                       <td className="col-2"><strong>Marca motor:</strong></td>
-                      <td className="col-2">RP-2000</td>
+                      <td className="col-2">{unidadData.marca_motor}</td>
                       <td className="col-2"><strong>Marca:</strong></td>
-                      <td className="col-2">CASE</td>
+                      <td className="col-2">{unidadData.marca_unidad}</td>
                       
                     </tr>
                     <tr>
                       <td colSpan={2} className="invisible-cells" ><strong></strong></td>
                       
                       <td className="col-2"><strong>Serie motor:</strong></td>
-                      <td className="col-2">RT-555-662</td>
+                      <td className="col-2">{unidadData.numero_serie_motor}</td>
                       <td className="col-2"><strong>Modelo:</strong></td>
-                      <td className="col-2">580M</td>
+                      <td className="col-2">{unidadData.modelo}</td>
                       
                     </tr>
                     <tr>
@@ -520,7 +407,7 @@ export const OrdenTrabajo = () => {
                       <td colSpan={2} className="invisible-cells" ><strong></strong></td>
                       
                       <td className="col-2"><strong>No. serie:</strong></td>
-                      <td className="col-2">56451DSE</td>
+                      <td className="col-2">{unidadData.numero_serie_unidad}</td>
                       
                     </tr>
                     <tr>
@@ -528,7 +415,7 @@ export const OrdenTrabajo = () => {
                       <td colSpan={2} className="invisible-cells" ><strong></strong></td>
                       
                       <td className="col-2"><strong>Placas:</strong></td>
-                      <td className="col-2">TR656TR</td>
+                      <td className="col-2">{unidadData.transito.placas}</td>
                       
                     </tr>
                   
@@ -559,20 +446,18 @@ export const OrdenTrabajo = () => {
                     </tr>
                   </thead>
                   <tbody className="table-body">
-                  {diseños.map((diseño) => (
-                      <tr key={diseño.id}>
+                  {fallas.map((falla) => (
+                      <tr key={falla.id}>
                       
                       <td colSpan={3}>
                       <input
                             type="text"
                             className="col-12"
-                            name="busquedaString"
-                            value={diseño.busquedaString}
+                            name="fallaReportada"
+                            value={falla.fallaReportada}
                             autoComplete="off"
                             onChange={(e) => {
-                              getDiseños(e, diseño);
-                              changeDiseñoInput(e, diseño);
-                              actualizarSubtotal(diseño);
+                              changeDiseñoInput(e, falla);
                             }}
                           />
                           {/* <input
@@ -596,15 +481,15 @@ export const OrdenTrabajo = () => {
               <button
                 type="button"
                 className="btn btn-success"
-                onClick={agregarDiseño}
+                onClick={agregarFalla}
               >
                 Agregar Falla
               </button>
-              {diseños.length > 1 && (
+              {fallas.length > 1 && (
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={eliminarDiseño}
+                  onClick={eliminarFalla}
                 >
                   Eliminar Falla
                 </button>
@@ -612,34 +497,6 @@ export const OrdenTrabajo = () => {
             </div>
 
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-            
-
-           
-
-           
 
             <div className="d-flex flex-md-row flex-column justify-content-between my-3 text-dark">
               <div className="col-12 col-md-6 cotizacion-condiciones">
@@ -663,7 +520,7 @@ export const OrdenTrabajo = () => {
             </div>
           </form>
         </div>
-      
+      )}
       {/* <CotizacionModal
         show={show}
         handleClose={handleClose}

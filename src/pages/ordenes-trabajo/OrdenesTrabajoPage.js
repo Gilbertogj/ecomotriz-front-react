@@ -122,6 +122,20 @@ export const OrdenesTrabajoPage = () => {
           </div>
         </Route>
 
+        <Route exact path={`${path}/orden/:id/crear-solicitud`}>
+          <div className="p-3">
+            <DetallesOrdenTrabajoPage />
+            {/* <p>hola</p> */}
+          </div>
+        </Route>
+
+        <Route exact path={`${path}/orden/:id/fallas-encontradas`}>
+          <div className="p-3">
+            <DetallesOrdenTrabajoPage />
+            {/* <p>hola</p> */}
+          </div>
+        </Route>
+
 
 
 

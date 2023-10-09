@@ -1,10 +1,11 @@
 import React , { useState} from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation  } from "react-router-dom";
 
 import { useFetchAndLoading } from "../../hooks/useFetchAndLoading";
 
 import { DetallesOrdenTrabajo } from "../../components/detalles-orden-trabajo/DetallesOrdenTrabajo.js";
-
+import { SolicitudRefacciones } from "../../components/solicitud-refacciones/SolicitudRefacciones.js";
+import { FallasEncontradas } from "../../components/fallas-encontradas/FallasEncontradas.js";
 
 import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner";
 
@@ -12,23 +13,29 @@ import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner"
 
 export const DetallesOrdenTrabajoPage = () => {
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const { pathname } = useLocation();
+  // const [isLoading, setIsLoading] = useState(false);
   
 
-//   const { data, isLoading } = useFetchAndLoading(
-//     `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/informacion-financiera/${idFinanzas}/`,
-//     idFinanzas
-//   );
+  const { data, isLoading } = useFetchAndLoading(
+    `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/${id}/`,
+    id
+  );
 
   return (
     <>
-      {isLoading ? (
+  
+
+
+        {isLoading ? (
         <LoadingSpinner />
+      ) : pathname.includes("crear-solicitud") ? (
+        <SolicitudRefacciones ordenTrabajoData={data} />
+      ) : pathname.includes("fallas-encontrada") ? (
+        <FallasEncontradas ordenTrabajoData={data} />
       ) : (
-        <DetallesOrdenTrabajo  />
-        // <DetallesOrdenTrabajo detallesInfoFinanciera={data} urlId={idFinanzas} />
-        // <p>hola nuevo </p>
-      )}
+        <DetallesOrdenTrabajo data={data} />
+      )}  
     </>
   );
 };

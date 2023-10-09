@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 
-import { useFetchAndLoading } from "../../hooks/useFetchAndLoading";
+import { useFetchAndLoadingWA } from "../../hooks/useFetchAndLoadingWA";
 
 import { DetalleUnidadOrden } from "../../components/detalle-unidad-orden/DetalleUnidadOrden";
 import { OrdenTrabajo } from "../../components/orden-trabajo/OrdenTrabajo";
@@ -15,8 +15,8 @@ export const UnidadOrdenPage = () => {
   const { pathname } = useLocation();
   // console.log(pathname);
 
-  const { data, isLoading } = useFetchAndLoading(
-    `${process.env.REACT_APP_ACTIVOS_BACKEND_URL}/api/unidades/${id}/`,
+  const { data, isLoading } = useFetchAndLoadingWA(
+    `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/assets/${id}/`,
     id
   );
 

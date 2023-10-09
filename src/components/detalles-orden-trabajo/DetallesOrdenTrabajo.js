@@ -7,17 +7,19 @@ import { setCurrentUser } from "../../redux/user/userSlice";
 import { SuccessModal } from "../success-modal/SuccessModal";
 import { CotizacionEdicion } from "../cotizacion-edicion/CotizacionEdicion";
 import { CotizacionPreview } from "../cotizacion-preview/CotizacionPreview";
+import { OrdenTrabajoPreview } from "../orden-trabajo-preview/OrdenTrabajoPreview";
 import { CotizacionPdfDocument } from "../cotizacion-pdf-document/CotizacionPdfDocument";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { toPng } from "html-to-image";
 
 export const DetallesOrdenTrabajo = ({ data }) => {
+  console.log(data)
   const [form, setForm] = useState({
-    // estado: data.estado,
+    status: data.status,
     // aprobacion: data.aprobacion,
   });
   const [show, setShow] = useState(false);
-  const [cotizacionData, setCotizacionData] = useState(data);
+  const [ordenTrabajoData, setCotizacionData] = useState(data);
   const [editMode, setEditMode] = useState(false);
   const [imgSrcUrl, setImgSrcUrl] = useState("");
 
@@ -62,11 +64,10 @@ export const DetallesOrdenTrabajo = ({ data }) => {
 
     let formData = new FormData();
 
-    formData.append("estado", form.estado);
-    formData.append("aprobacion", form.aprobacion);
-
+    formData.append("status", form.status);
+    
     let data = await fetch(
-      `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/cotizaciones/${cotizacionData.id}/`,
+      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/${ordenTrabajoData.id}/`,
       {
         method: "PATCH",
         headers: {
@@ -83,7 +84,7 @@ export const DetallesOrdenTrabajo = ({ data }) => {
       dispatch(setCurrentUser({ token: json.token }));
 
       data = await fetch(
-        `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/cotizaciones/${cotizacionData.id}/`,
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/${ordenTrabajoData.id}/`,
         {
           method: "PATCH",
           headers: {
@@ -104,82 +105,82 @@ export const DetallesOrdenTrabajo = ({ data }) => {
     }
   };
 
-  const eliminarCotizacion = async (e) => {
-    try {
-      const confirm = window.confirm("¿Esta seguro de eliminar la cotización?");
+  // const eliminarCotizacion = async (e) => {
+  //   try {
+  //     const confirm = window.confirm("¿Esta seguro de eliminar la cotización?");
 
-      if (!confirm) return;
+  //     if (!confirm) return;
 
-      e.target.disabled = true;
-      e.target.textContent = "Eliminando...";
+  //     e.target.disabled = true;
+  //     e.target.textContent = "Eliminando...";
 
-      let data = await fetch(
-        `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/cotizaciones/${cotizacionData.id}/`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Token ${authtoken}`,
-          },
-        }
-      );
+  //     let data = await fetch(
+  //       `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/cotizaciones/${cotizacionData.id}/`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           Authorization: `Token ${authtoken}`,
+  //         },
+  //       }
+  //     );
 
-      if (data.headers.get("Content-Type") !== null) {
-        let json = await data.json();
+  //     if (data.headers.get("Content-Type") !== null) {
+  //       let json = await data.json();
 
-        if (json.expired) {
-          dispatch(setCurrentUser({ token: json.token }));
+  //       if (json.expired) {
+  //         dispatch(setCurrentUser({ token: json.token }));
 
-          data = await fetch(
-            `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/cotizaciones/${cotizacionData.id}/`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Token ${json.token}`,
-              },
-            }
-          );
-        }
-      }
+  //         data = await fetch(
+  //           `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/cotizaciones/${cotizacionData.id}/`,
+  //           {
+  //             method: "DELETE",
+  //             headers: {
+  //               Authorization: `Token ${json.token}`,
+  //             },
+  //           }
+  //         );
+  //       }
+  //     }
 
-      if (data.status === 204) {
-        alert("Cotización eliminada correctamente.");
-        history.push(`/concreco/comercializacion/cotizaciones`);
-      }
-      if (data.status === 400) {
-        alert(JSON.stringify(data.json));
-      }
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    } finally {
-      e.target.textContent = "Eliminar Cotización";
-      e.target.disabled = false;
-    }
-  };
+  //     if (data.status === 204) {
+  //       alert("Cotización eliminada correctamente.");
+  //       history.push(`/concreco/comercializacion/cotizaciones`);
+  //     }
+  //     if (data.status === 400) {
+  //       alert(JSON.stringify(data.json));
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert(error);
+  //   } finally {
+  //     e.target.textContent = "Eliminar Cotización";
+  //     e.target.disabled = false;
+  //   }
+  // };
 
-  const handleDescargarPdf = async (e) => {
-    try {
-      e.target.disabled = true;
-      e.target.textContent = "Descargando...";
+  // const handleDescargarPdf = async (e) => {
+  //   try {
+  //     e.target.disabled = true;
+  //     e.target.textContent = "Descargando...";
 
-      const toImageNode = document.querySelector(".to-image");
+  //     const toImageNode = document.querySelector(".to-image");
 
-      const imageSrcUrl = await toPng(toImageNode);
+  //     const imageSrcUrl = await toPng(toImageNode);
 
-      setImgSrcUrl(imageSrcUrl);
+  //     setImgSrcUrl(imageSrcUrl);
 
-      setTimeout(() => {
-        document.querySelector(".download-btn").click();
-        e.target.textContent = "Descargar PDF";
-        e.target.disabled = false;
-      }, 3000);
-    } catch (error) {
-      e.target.textContent = "Descargar PDF";
-      e.target.disabled = false;
-      console.log(error);
-      alert(error);
-    }
-  };
+  //     setTimeout(() => {
+  //       document.querySelector(".download-btn").click();
+  //       e.target.textContent = "Descargar PDF";
+  //       e.target.disabled = false;
+  //     }, 3000);
+  //   } catch (error) {
+  //     e.target.textContent = "Descargar PDF";
+  //     e.target.disabled = false;
+  //     console.log(error);
+  //     alert(error);
+  //   }
+  // };
 
   return (
     <>
@@ -200,7 +201,7 @@ export const DetallesOrdenTrabajo = ({ data }) => {
 
 
 
-          <div className="d-flex justify-content-between">
+          {/* <div className="d-flex justify-content-between">
             <button
               className="btn btn-secondary"
               onClick={() => {
@@ -209,28 +210,19 @@ export const DetallesOrdenTrabajo = ({ data }) => {
             >
               {editMode ? "Cancelar edición" : "Editar Orden de trabajo"}
             </button>
-            {/* {!editMode && userRol === "Administracion" && (
-              <button
-                className="btn btn-danger"
-                onClick={(e) => {
-                  eliminarCotizacion(e);
-                }}
-              >
-                Eliminar Cotización
-              </button>
-            )} */}
-          </div>
+          
+          </div> */}
 
           {editMode ? (
-            <CotizacionEdicion cotizacionData={data} />
+            <CotizacionEdicion ordenTrabajoData={data} />
           ) : (
             <>
-              <CotizacionPreview
-                cotizacionData={cotizacionData}
+              <OrdenTrabajoPreview
+                ordenTrabajoData={ordenTrabajoData}
                 form={form}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
-                handleDescargarPdf={handleDescargarPdf}
+                // handleDescargarPdf={handleDescargarPdf}
                 actualizarEstatusBtnRef={actualizarEstatusBtnRef}
               />
 
@@ -248,8 +240,8 @@ export const DetallesOrdenTrabajo = ({ data }) => {
                 handleClose={() => {
                   setShow(false);
                 }}
-                title="Cotización Actualizada"
-                text="Se ha actualizado la cotización correctamente"
+                title="Orden de Trabajo Actualizada"
+                text="Se ha actualizado la orden de trabajo correctamente"
               />
             </>
           )}

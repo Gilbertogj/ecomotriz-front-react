@@ -38,6 +38,8 @@ export const CotizacionPreview = ({
   const [diseños, setDiseños] = useState(diseñosInitialState);
   const { authtoken, dispatch } = useContext(ReactReduxContext);
 
+  console.log(form.estado)
+
   const getDiseños = async (e, diseñoRef) => {
     setDiseños((prevState) => {
       const arr = [...prevState];
@@ -161,23 +163,24 @@ export const CotizacionPreview = ({
     <div className="cotizacion-container">
       <div className="d-flex justify-content-md-between justify-content-center mb-1 mb-md-5 actualizar-estatus">
         <form
-          className="d-flex flex-column flex-md-row align-items-center align-items-md-end"
+          className="d-flex flex-column flex-md-row align-items-center align-items-md-end mt-3"
           onSubmit={handleSubmit}
         >
-          {/* <div className="d-flex flex-column">
-            <label htmlFor="aprobacion">Aprobación</label>
+          <div className="d-flex flex-column me-3">
+            <label htmlFor="status">Estatus de la orden</label>
             <select
-              name="aprobacion"
-              value={form.aprobacion}
+              name="status"
+              value={form.estado}
               className="select-pedido form-select"
-              id="aprobacion"
+              id="status"
               onChange={handleChange}
               required
             >
-              <option value="Aceptada">Aceptada</option>
-              <option value="Rechazada">Rechazada</option>
+              <option value="Open">Abierta</option>
+              <option value="Closed">Cerrada</option>
+              <option value="In Progress">En proceso</option>
             </select>
-          </div> */}
+          </div>
           {/* <div className="d-flex flex-column mx-0 mx-md-3 my-3 my-md-0">
             <label htmlFor="status">Estatus</label>
             <select
@@ -190,12 +193,13 @@ export const CotizacionPreview = ({
             >
               <option value="Aprobada">Aprobada</option>
               <option value="Por aprobar">Por aprobar</option>
+              
             </select>
           </div> */}
           <div>
             <input
               type="submit"
-              value="Cerrar Orden de Trabajo"
+              value="Actualizar"
               className="btn btn-success"
               ref={actualizarEstatusBtnRef}
               disabled
@@ -212,7 +216,7 @@ export const CotizacionPreview = ({
       </div>
 
       <div className="to-image">
-        <div className="cotizacion-header-container  py-3">
+        <div className="cotizacion-header-container  mx-md-3 py-3">
           {/* <div className="d-flex align-items-center">
             <img src={Logo} alt="logo" />
           </div> */}
