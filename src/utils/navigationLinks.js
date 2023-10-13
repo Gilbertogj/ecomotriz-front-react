@@ -7,6 +7,11 @@ export const userTypeLinks = {
       link: `${BASE_URL}/ordenes-trabajo`,
       id: 1,
     },
+    {
+      text: "Compras ",
+      link: `${BASE_URL}/compras`,
+      id: 2,
+    },
    
   ],
   Ventas: [
@@ -84,6 +89,65 @@ export const ordenesTrabajoLinks = {
       link: `${BASE_URL}/ordenes-trabajo/unidades-orden`,
       id: 2,
     },
+
+    
+    
+  ],
+
+  Ventas: [
+    {
+      text: "Lista de Clientes",
+      link: `${BASE_URL}/logistica/clientes`,
+      id: 1,
+    },
+    {
+      text: "Lista de Pedidos",
+      link: `${BASE_URL}/logistica/pedidos`,
+      id: 2,
+    },
+    {
+      text: "Realizar Pedido",
+      link: `${BASE_URL}/logistica/clientes-pedido`,
+      id: 3,
+    },
+  ],
+
+  Produccion: [
+    {
+      text: "Lista de Clientes",
+      link: `${BASE_URL}/logistica/clientes`,
+      id: 1,
+    },
+    {
+      text: "Lista de Pedidos",
+      link: `${BASE_URL}/logistica/pedidos`,
+      id: 2,
+    },
+    {
+      text: "Realizar Pedido",
+      link: `${BASE_URL}/logistica/clientes-pedido`,
+      id: 3,
+    },
+  ],
+};
+
+
+export const comprasLinks = {
+  Administracion: [
+    // {
+    //   text: "Lista de Clientes",
+    //   link: `${BASE_URL}/unidades/clientes`,
+    //   id: 1,
+    // },
+    {
+      text: "Lista de Refacciones",
+      link: `${BASE_URL}/compras/lista-refacciones`,
+      id: 1,
+    },
+
+   
+
+    
     
   ],
 

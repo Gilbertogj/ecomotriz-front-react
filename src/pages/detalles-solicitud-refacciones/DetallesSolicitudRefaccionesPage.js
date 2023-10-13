@@ -13,9 +13,15 @@ import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner"
 
 export const DetallesSolicitudRefaccionesPage = () => {
   const { idSolicitud } = useParams();
+  const { idOrden } = useParams();
   const { pathname } = useLocation();
   // const [isLoading, setIsLoading] = useState(false);
   
+
+  // const { data, isLoading } = useFetchAndLoading(
+  //   `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/${idSolicitud}/`,
+  //   idSolicitud
+  // );
 
   const { data, isLoading } = useFetchAndLoading(
     `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/${idSolicitud}/`,
@@ -30,6 +36,7 @@ export const DetallesSolicitudRefaccionesPage = () => {
         <LoadingSpinner />
       ) : (
         <DetallesSolicitudRefacciones solicitudData={data} />
+        // <p>hola </p>
       )}
   
 

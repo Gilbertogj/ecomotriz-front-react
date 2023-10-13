@@ -316,23 +316,34 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
       };
 
       formattedParts.push(obj);
-      // console.log(formattedParts);
+
     });
+
+    let falla=0;
+
+    formattedParts.forEach((formattedPart) => {
+     falla= formattedPart.part;
+    });
+
+   
+    console.log(falla);
+
+
 
     const dict_data = {
   
-      price: 0,
+  
       work_order: String(ordenTrabajoData.id),
   
 
-      part_lines: formattedParts,
+      found_fault: falla,
    
     };
 
     console.log(formattedParts)
 
     let data = await fetch(
-      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/",
+      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaultslines/",
       {
         method: "POST",
         headers: {

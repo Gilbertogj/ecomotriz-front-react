@@ -6,7 +6,7 @@ import { ReactReduxContext } from "./context/reactReduxContext";
 import { LoginPage } from "./pages/login/LoginPage";
 import { HomePage } from "./pages/home/HomePage";
 import { OrdenesTrabajoPage } from "./pages/ordenes-trabajo/OrdenesTrabajoPage";
-
+import { ComprasPage } from "./pages/compras/ComprasPage";
 
 import { EcomotrizPage } from "./pages/ecomotriz/EcomotrizPage";
 import { ComercializacionPage } from "./pages/comercializacion/ComercializacionPage";
@@ -49,6 +49,22 @@ function App() {
               userRol === "Ventas" ||
               userRol === "Produccion" ? (
                 <OrdenesTrabajoPage />
+              ) : (
+                <Redirect to="/home" />
+              )
+            ) : (
+              <Redirect to="/" />
+            )
+          }
+        />
+        <Route
+          path="/compras"
+          render={() =>
+            currentUser ? (
+              userRol === "Administracion" ||
+              userRol === "Ventas" ||
+              userRol === "Produccion" ? (
+                <ComprasPage />
               ) : (
                 <Redirect to="/home" />
               )
