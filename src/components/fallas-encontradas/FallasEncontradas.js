@@ -30,12 +30,30 @@ import Credito from "../../assets/img/credito.png";
 
 // };
 
+const initialState = {
+   
+    price: "",
+    work_order: "",
+    part_lines:"",
+  
+  };
 
-  const initialState = [
+  const partsInitialState = [
     {
       id: 1,
-      found_falt: "",
-      work_order:"",
+
+   
+      price:"",
+      description:"",
+      partsData:[],
+      busquedaString:"",
+      producto:"",
+      rack:"",
+      fault:"",
+
+
+      
+
   
     },
   ];
@@ -73,8 +91,8 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
   const [show, setShow] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   // const [diseños, setDiseños] = useState(diseñosInitialState);
-  const [fallas, setFallas] = useState(initialState);
-  
+  // const [fallas, setFallas] = useState(fallasInitialState);
+  const [parts, setParts] = useState(partsInitialState);
   const [sumaSubTotales, setSumaSubTotales] = useState(0);
   const [ivaTotal, setIvaTotal] = useState(0);
   const [total, setTotal] = useState(0);
@@ -124,12 +142,12 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
     });
   };
 
-  const getFallas = async (e, fallaRef) => {
-    setFallas((prevState) => {
+  const getPartes = async (e, parteRef) => {
+    setParts((prevState) => {
       const arr = [...prevState];
 
-      arr[fallaRef.id - 1] = {
-        ...arr[fallaRef.id - 1],
+      arr[parteRef.id - 1] = {
+        ...arr[parteRef.id - 1],
        
       };
 
@@ -158,12 +176,12 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
       json = await data.json();
     }
 
-    setFallas((prevState) => {
+    setParts((prevState) => {
       const arr = [...prevState];
 
-      arr[fallaRef.id - 1] = {
-        ...arr[fallaRef.id - 1],
-        fallasData: json.results,
+      arr[parteRef.id - 1] = {
+        ...arr[parteRef.id - 1],
+        partsData: json.results,
       };
 
       return arr;
@@ -171,31 +189,32 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
   };
 
 
-  const changefallaInput = (e, fallaRef) => {
-    setFallas((prevState) => {
+  const changeParteInput = (e, parteRef) => {
+    setParts((prevState) => {
       const arr = [...prevState];
 
     
       if (e.target.name === "busquedaString") {
-        arr[fallaRef.id - 1] = {
-          ...arr[fallaRef.id - 1],
-          fault:"",
-     
+        arr[parteRef.id - 1] = {
+          ...arr[parteRef.id - 1],
+          description:"",
+          producto: "",
+          rack:"",
           
          
         };
       }
 
-      if (e.target.name === "fault") {
-        arr[fallaRef.id - 1] = {
-          ...arr[fallaRef.id - 1],
-          user:"",
+      if (e.target.name === "description") {
+        arr[parteRef.id - 1] = {
+          ...arr[parteRef.id - 1],
+          rack: "",
        
         };
       }
 
-      arr[fallaRef.id - 1] = {
-        ...arr[fallaRef.id - 1],
+      arr[parteRef.id - 1] = {
+        ...arr[parteRef.id - 1],
         [`${e.target.name}`]: e.target.value,
       };
       return arr;
@@ -203,15 +222,20 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
   };
 
 
-  const agregarfalla = () => {
-    setFallas((prevState) => {
+  const agregarParte = () => {
+    setParts((prevState) => {
       const newArr = [...prevState];
 
       newArr.push({
-        id: fallas.length + 1,
-        work_order: "",
-        found_fault:"",
-    
+        id: parts.length + 1,
+   
+
+        price:"",
+        description:"",
+        partsData:[],
+        busquedaString:"",
+        producto:"",
+        rack:"",
   
        
       });
@@ -223,10 +247,10 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
   };
 
   
-  console.log(fallas);
+  console.log(parts);
 
-  const eliminarfalla = () => {
-    setFallas((prevState) => {
+  const eliminarParte = () => {
+    setParts((prevState) => {
       const newArr = [...prevState];
       newArr.pop();
       return newArr;
@@ -277,36 +301,38 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
       fechaHoy.getMonth() + 1
     ).padStart(2, 0)}-${fechaHoy.getDate()}`;
 
-    const formattedFallas = [];
+    const formattedParts = [];
 
-    fallas.forEach((falla) => {
+    parts.forEach((parte) => {
       const obj = {
        
         
-        part: falla.producto,
-        observations: falla.observations,
-        quantity: falla.quantity,
+        part: parte.producto,
+
+
         price: "0",
 
 
       };
 
-      formattedFallas.push(obj);
-      // console.log(formattedfallas);
+      formattedParts.push(obj);
+      // console.log(formattedParts);
     });
 
     const dict_data = {
-      folio: form.folio,
+  
       price: 0,
       work_order: String(ordenTrabajoData.id),
-      observations: form.observations,
-      quantity: form.quantity,
-      part_lines: formattedFallas,
+  
+
+      part_lines: formattedParts,
    
     };
 
+    console.log(formattedParts)
+
     let data = await fetch(
-      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/fallasrequests/",
+      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/",
       {
         method: "POST",
         headers: {
@@ -325,7 +351,7 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
       dispatch(setCurrentUser({ token: json.token }));
 
       data = await fetch(
-        "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/fallasrequests/",
+        "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/",
         {
           method: "POST",
           headers: {
@@ -417,7 +443,7 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
                   <td className="text-center">
                     {ordenTrabajoData.status == "Open" ? "No atendida": ordenTrabajoData.status == "Closed" ? "Cerrada": "En proceso"}</td>
                 </tr>
-                
+              
               </tbody>
             </table>
               
@@ -509,7 +535,6 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
             </div>
 
 
-            
 
 
 
@@ -518,25 +543,15 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
 
             <div>
               <div className="table-responsive">
-              <table className=" w-100 blue-table tabla-diseños">
+              <table className="blue-table tabla-diseños">
                   <thead>
-                    <tr >
-                      <th className="col-12">
+                    <tr>
+                      <th className="col-6">
                         <div className="d-flex justify-content-center">
-                          Falla
+                          Falla Encontrada
                         </div>
                       </th>
-                      {/* <th className="col-1">
-                        <div className="d-flex justify-content-center">
-                          Cantidad
-                        </div>
-                      </th> */}
-
-                      {/* <th className="col-5">
-                        <div className="d-flex justify-content-center">
-                          Observaciones
-                        </div>
-                      </th> */}
+                      
                       {/* <th className="col-1">
                         {isDesktop ? (
                           <div className="d-flex justify-content-center">
@@ -548,11 +563,7 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
                           </div>
                         )}
                       </th> */}
-                      {/* <th className="col-2">
-                        <div className="d-flex justify-content-center">
-                          
-                        </div>
-                      </th> */}
+                  
                       {/* <th className="col-2">
                         <div className="d-flex justify-content-center">
                           
@@ -561,43 +572,47 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
                     </tr>
                   </thead>
                   <tbody className="table-body">
-                    {fallas.map((falla) => (
-                      <tr key={falla.id}>
+                    {parts.map((parte) => (
+                      <tr key={parte.id}>
                         <td>
                           <input
                             type="text"
-                            className="col-6"
+                            className="col-4"
                             name="busquedaString"
-                            value={falla.busquedaString}
+                            value={parte.busquedaString}
                             autoComplete="off"
                             onChange={(e) => {
-                              getFallas(e, falla);
-                              changefallaInput(e, falla);
+                              getPartes(e, parte);
+                              changeParteInput(e, parte);
                               
                             }}
                           />
                           <select
-                            className="col-6"
-                            name="fault"
-                            value={falla.fault}
+                            className="col-8"
+                            name="description"
+                            value={parte.description}
                             required
                             onChange={(e) => {
-                              const newArr = fallas[
-                                falla.id - 1
-                              ].fallasData.filter(
+                              const newArr = parts[
+                                parte.id - 1
+                              ].partsData.filter(
                                 (a) => a.fault === e.target.value
                               );
 
                               console.log(newArr);
 
-                    
+                              // const precios = [];
+
+                              // if (newArr[0].precio_contado.trim()) {
+                              //   precios.push(newArr[0].precio_contado);
+                              // }
                            
 
-                              setFallas((prevState) => {
+                              setParts((prevState) => {
                                 const arr = [...prevState];
 
-                                arr[falla.id - 1] = {
-                                  ...arr[falla.id - 1],
+                                arr[parte.id - 1] = {
+                                  ...arr[parte.id - 1],
                                  
                                   producto: newArr[0].id,
                                 };
@@ -605,54 +620,21 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
                                 return arr;
                               });
 
-                              changefallaInput(e, falla);
+                              changeParteInput(e, parte);
                        
                             }}
-                            
                           >
-                            {/* <option></option>
-                            {falla.fallasData.map((data) => (
+                            <option></option>
+                            {parte.partsData.map((data) => (
                               <option key={data.id} value={data.fault}>
-                               {data.fault}
+                                {data.job_code} {"-"} {data.fault}
                               </option>
-                            ))} */}
+                            ))}
                           </select>
                         </td>
-                        {/* <td>
-                        <input
-                            type="number"
-                            className="col-12"
-                            name="quantity"
-                            value={falla.quantity}
-                            onChange={(e) => {
-                              changefallaInput(e, falla);
-                              
-                            }}
-                            autoComplete="off"
-                            required
-                            onWheel={(e) => {
-                              e.target.blur();
-                            }}
-                          />
-                        </td> */}
+                        
                       
-                        {/* <td >
-                        <input
-                            type="text"
-                            className="col-12"
-                            name="observations"
-                            value={falla.observations}
-                            onChange={(e) => {
-                              changefallaInput(e, falla);
-                              
-                            }}
-                            autoComplete="off"
-                            required
-                            onWheel={(e) => {
-                              e.target.blur();
-                            }}
-                          />
-                        </td> */}
+                       
                           
                      
                      
@@ -667,15 +649,15 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
               <button
                 type="button"
                 className="btn btn-success"
-                onClick={agregarfalla}
+                onClick={agregarParte}
               >
                 Agregar Falla
               </button>
-              {fallas.length > 1 && (
+              {parts.length > 1 && (
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={eliminarfalla}
+                  onClick={eliminarParte}
                 >
                   Eliminar Falla
                 </button>

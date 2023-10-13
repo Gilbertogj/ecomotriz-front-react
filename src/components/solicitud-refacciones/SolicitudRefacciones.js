@@ -646,7 +646,7 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
                        
                             }}
                           >
-                            {/* <option></option> */}
+                            <option></option>
                             {parte.partsData.map((data) => (
                               <option key={data.id} value={data.description}>
                                 {data.sae_key} {"-"} {data.description}

@@ -8,6 +8,8 @@ import { ListaOrdenesTrabajoPage } from "../lista-ordenes-trabajo/ListaOrdenesTr
 import { DetallesOrdenTrabajoPage } from "../detalles-orden-trabajo/DetallesOrdenTrabajoPage.js";
 import { ListaUnidadesPage } from "../lista-unidades/ListaUnidadesPage";
 import { UnidadOrdenPage } from "../unidad-orden/UnidadOrdenPage";
+import { DetallesSolicitudRefaccionesPage } from "../detalles-solicitud-refacciones/DetallesSolicitudRefaccionesPage.js";
+
 
 import { UnidadPage } from "../unidad/UnidadPage";
 import { AgregarUnidadPage } from "../agregar-unidad/AgregarUnidadPage";
@@ -39,6 +41,7 @@ import { AgregarCondicionVentaPage } from "../agregar-condicion-venta/AgregarCon
 import { ListaLineasCotizacionesPage } from "../lista-lineas-cotizaciones/ListaLineasCotizacionesPage";
 import { ListaCotizacionesPage } from "../lista-cotizationes/ListaCotizacionesPage";
 import { Tabk } from "../lista-cotizationes/ListaCotizacionesPage";
+
 
 
 import "./OrdenesTrabajoPage.styles.scss";
@@ -133,6 +136,13 @@ export const OrdenesTrabajoPage = () => {
           <div className="p-3">
             <DetallesOrdenTrabajoPage />
             {/* <p>hola</p> */}
+          </div>
+        </Route>
+
+        <Route exact path={`${path}/orden/:idOrden/solicitud-refacciones/:idSolicitud`}>
+          <div className="p-3">
+            <DetallesSolicitudRefaccionesPage />
+            {/* <p>hola si funciona</p> */}
           </div>
         </Route>
 

@@ -461,6 +461,59 @@ export const OrdenTrabajoPreview = ({
               </div>
             </div>
 
+            <div>
+            <div className="text-center m-3">
+          <h3>Solicitudes de Refacciones</h3>
+        </div>
+              <div className="table-responsive">
+           
+                <table className="w-100 blue-table tabla-diseños">
+                
+                  <thead>
+                    <tr>
+                    
+                      <th className="col-3">
+                        <div className="d-flex justify-content-center">
+                          Folio
+                        </div>
+                      </th>
+                      <th className="col-3">
+                        <div className="d-flex justify-content-center">
+                          Precio
+                        </div>
+                      </th>
+                    
+                     
+                     
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                  {ordenTrabajoData.parts_requests.map((linea, i) => (
+                    <tr key={i}>
+
+                  <td>
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${ordenTrabajoData.id}/solicitud-refacciones/${linea.id}`
+                    }
+                  >{linea.folio}
+                  </Link>
+                </td>
+                     
+                <td>
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${ordenTrabajoData.id}/solicitud-refacciones/${linea.id}`
+                    }
+                  >{linea.price}
+                  </Link>
+                </td>
+                    </tr>
+            ))}
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             {/* <div className="mt-3 d-flex justify-content-between">
               <button
                 type="button"
