@@ -98,8 +98,8 @@ export const ComprasPage = () => {
 
         <Route exact path={`${path}/lista-refacciones`}>
           <div className="p-3">
-            {/* <ListaRefaccionesComprasPage /> */}
-            <p>Tabla lista de refacciones </p>
+            <ListaRefaccionesComprasPage />
+            {/* <p>Tabla lista de refacciones </p> */}
           </div>
         </Route>
 

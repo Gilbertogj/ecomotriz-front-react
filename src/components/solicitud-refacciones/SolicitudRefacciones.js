@@ -310,6 +310,8 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
         observations: parte.observations,
         quantity: parte.quantity,
         price: "0",
+        bought: true,
+        
 
 
       };
@@ -325,6 +327,7 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
       observations: form.observations,
       quantity: form.quantity,
       part_lines: formattedParts,
+      
    
     };
 

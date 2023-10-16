@@ -11,6 +11,7 @@ import Internet from "../../assets/img/internet.png";
 import Logo from "../../assets/img/logo-slogan.png";
 import Tarjetas from "../../assets/img/tarjetas.png";
 import Credito from "../../assets/img/credito.png";
+import { SuccessModal } from "../success-modal/SuccessModal";
 
 const diseñosInitialState = [
   {
@@ -38,6 +39,7 @@ export const OrdenTrabajoPreview = ({
   const isDesktop = useIsDesktop();
   const [diseños, setDiseños] = useState(diseñosInitialState);
   const { authtoken, dispatch } = useContext(ReactReduxContext);
+  const [show, setShow] = useState(false);
 
   console.log(form.estado)
 
@@ -160,7 +162,96 @@ export const OrdenTrabajoPreview = ({
     });
   };
 
+  const handleClick = async (e, linea) => {
+    try {
+      e.target.classList.add("d-none");
+
+      e.target.nextSibling.classList.remove("d-none");
+
+      let formData = new FormData();
+
+      // let status;
+      // let bought;
+
+
+      // if (linea.status=== "Por Suministrar") {
+      //   status = "Suministrado";
+      //   bought = false;
+        
+      // }
+
+      // if (linea.status === "Suministrado") {
+      //   status = "Por Suministrar";
+      //   bought = true;
+      // }
+
+      // formData.append("status", status);
+      // formData.append("bought", bought);
+
+      let data = await fetch(
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaults/${linea.id}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Token ${authtoken}`,
+          },
+     
+        }
+      );
+
+      let json = await data.json();
+
+      if (json.expired) {
+        dispatch(setCurrentUser({ token: json.token }));
+
+        data = await fetch(
+          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaults/${linea.id}/`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Token ${json.token}`,
+            },
+       
+          }
+        );
+
+        json = await data.json();
+      }
+
+      if (data.status === 204 || data.status === 200) {
+        setShow(true);
+        // setPedidos((prevState) => {
+        //   const arr = [...prevState];
+
+        //   const arrElementsStringifed = arr.map((el) => JSON.stringify(el));
+
+        //   const idx = arrElementsStringifed.indexOf(JSON.stringify(pedido));
+
+        //   arr.splice(idx, 1, json);
+
+        //   return arr;
+        // });
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    } finally {
+      e.target.nextSibling.classList.add("d-none");
+      e.target.classList.remove("d-none");
+    }
+  };
+
+  const handleReload = () => {
+    window.location.reload(); // Reload the page when the button is clicked
+  };
+
   return (
+    <>
+    <SuccessModal
+        show={show}
+        handleClose={handleReload}
+        title="Falla encontrada eliminada"
+      />
     <div className="cotizacion-container">
       <div className="d-flex justify-content-md-between justify-content-center mb-1 mb-md-5 actualizar-estatus">
         <form
@@ -442,9 +533,14 @@ export const OrdenTrabajoPreview = ({
                 <table className="w-100 blue-table tabla-diseños">
                   <thead>
                     <tr>
-                      <th className="col-12">
+                      <th className="col-11">
                         <div className="d-flex justify-content-center">
                           Fallas ecnontradas
+                        </div>
+                      </th>
+                      <th className="col-1">
+                        <div className="d-flex justify-content-center">
+                        
                         </div>
                       </th>
                      
@@ -453,8 +549,36 @@ export const OrdenTrabajoPreview = ({
                   <tbody className="table-body">
                   {ordenTrabajoData.found_fault_lines.map((linea, i) => (
                     <tr key={i}>
-                      <td>{linea.fault}</td>
+                      <td>{linea.found_fault.fault}
+                      
+          </td>
+
+                        <td>
+                      
+                      <button
+                          className="btn btn-danger btn-sm"
+                          onClick={(e) => {
+                            handleClick(e, linea);
+                          }}
+                        >
+                          {linea.found_fault.fault && "Eliminar"}
+                         
+                        </button>
+            <button
+                          className="btn btn-danger d-none"
+                          type="checkbox"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button></td>
                     </tr>
+
+                    
             ))}
                   </tbody>
                 </table>
@@ -545,5 +669,6 @@ export const OrdenTrabajoPreview = ({
         
       </div>
     </div>
+    </>
   );
 };

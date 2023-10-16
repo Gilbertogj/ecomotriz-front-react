@@ -7,11 +7,12 @@ import { setCurrentUser } from "../../redux/user/userSlice";
 
 import { SuccessModal } from "../success-modal/SuccessModal";
 
-export const TablaRefaccionesCompras = ({ ordenes, setOrdenes }) => {
-  console.log(ordenes);
+export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
+  // console.log(ordenes);
   const [show, setShow] = useState(false);
 
   const { pathname } = useLocation();
+  const [nuevoPrecio, setNuevoPrecio] = useState();
 
   const { authtoken, dispatch, userRol } = useContext(ReactReduxContext);
 
@@ -90,40 +91,196 @@ export const TablaRefaccionesCompras = ({ ordenes, setOrdenes }) => {
   //   }
   // };
 
+  const handlePrecioChange = (event) => {
+    setNuevoPrecio(parseFloat(event.target.value)); // Actualiza el estado del nuevo precio
+  };
+
+  const handleClick = async (e, refaccion) => {
+    try {
+      e.target.classList.add("d-none");
+
+      e.target.nextSibling.classList.remove("d-none");
+
+      let formData = new FormData();
+
+      let status;
+      let bought;
+
+
+      if (refaccion.status=== "Por Suministrar") {
+        status = "Suministrado";
+        bought = false;
+        
+      }
+
+      if (refaccion.status === "Suministrado") {
+        status = "Por Suministrar";
+        bought = true;
+      }
+
+      formData.append("status", status);
+      formData.append("bought", bought);
+
+      let data = await fetch(
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${refaccion.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Token ${authtoken}`,
+          },
+          body: formData,
+        }
+      );
+
+      let json = await data.json();
+
+      if (json.expired) {
+        dispatch(setCurrentUser({ token: json.token }));
+
+        data = await fetch(
+          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${refaccion.id}/`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Token ${json.token}`,
+            },
+            body: formData,
+          }
+        );
+
+        json = await data.json();
+      }
+
+      if (data.status === 201 || data.status === 200) {
+        setShow(true);
+        // setPedidos((prevState) => {
+        //   const arr = [...prevState];
+
+        //   const arrElementsStringifed = arr.map((el) => JSON.stringify(el));
+
+        //   const idx = arrElementsStringifed.indexOf(JSON.stringify(pedido));
+
+        //   arr.splice(idx, 1, json);
+
+        //   return arr;
+        // });
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    } finally {
+      e.target.nextSibling.classList.add("d-none");
+      e.target.classList.remove("d-none");
+    }
+  };
+
+  const handleClickPrecio = async (e, refaccion) => {
+    try {
+      e.target.classList.add("d-none");
+
+      e.target.nextSibling.classList.remove("d-none");
+
+      let formData = new FormData();
+    
+
+    
+      formData.append("price", nuevoPrecio);
+      
+
+      let data = await fetch(
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${refaccion.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Token ${authtoken}`,
+          },
+          body: formData,
+        }
+      );
+
+      let json = await data.json();
+
+      if (json.expired) {
+        dispatch(setCurrentUser({ token: json.token }));
+
+        data = await fetch(
+          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${refaccion.id}/`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Token ${json.token}`,
+            },
+            body: formData,
+          }
+        );
+
+        json = await data.json();
+      }
+
+      if (data.status === 201 || data.status === 200) {
+        setShow(true);
+        // setPedidos((prevState) => {
+        //   const arr = [...prevState];
+
+        //   const arrElementsStringifed = arr.map((el) => JSON.stringify(el));
+
+        //   const idx = arrElementsStringifed.indexOf(JSON.stringify(pedido));
+
+        //   arr.splice(idx, 1, json);
+
+        //   return arr;
+        // });
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    } finally {
+      e.target.nextSibling.classList.add("d-none");
+      e.target.classList.remove("d-none");
+    }
+  };
+
+  const handleReload = () => {
+    window.location.reload(); // Reload the page when the button is clicked
+  };
+
   return (
     <>
       <SuccessModal
         show={show}
-        handleClose={handleClose}
-        title="Pedido actualizado"
+        handleClose={handleReload}
+        title="Linea de Refaccion Actualizada"
       />
       <div className="table-responsive p-0">
         <Table striped bordered hover className="text-center">
           <thead>
             <tr>
-            <th>Estatus</th>
-              <th>Folio O.T.</th>
-              <th>Fecha</th>
-              <th>Cliente</th>
-              <th>Número económico</th>
+            <th>Folio Orden</th>
+            <th>Folio Solicitud Refacciones</th>
+            <th>Cantidad</th>
+              <th>Número de parte</th>
+              <th>Descripción</th>
+              <th>Precio</th>
+            
+              <th>Compras </th>
               
              
             </tr>
           </thead>
           <tbody>
-            {ordenes.map((orden) => (
+            {refacciones.map((refaccion) => (
               <tr
-                key={orden.id}
+                key={refaccion.id}
 
-                className={`${
+                // className={`${
                 
-                     orden.status === "Closed"
-                        ? "table-success"
-                        :  orden.status === "Open"
-                        ? "table-danger"
-                      : "table-warning"
+                //      orden.status === "Closed"
+                //         ? "table-success"
+                //         :  orden.status === "Open"
+                //         ? "table-danger"
+                //       : "table-warning"
                    
-                }`}
+                // }`}
                 // className="table-row"
                 
                 // {`${
@@ -152,59 +309,124 @@ export const TablaRefaccionesCompras = ({ ordenes, setOrdenes }) => {
               >
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${orden.id}`
+                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
                     }
                   >
-                    {orden.status == "Open" ? "No atendida": orden.status == "Closed" ? "Cerrada": "En proceso"}
+                    {refaccion.id}
              
                   </Link>
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${orden.id}`
+                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
                     }
                   >
-                    {orden.folio}
+                    {refaccion.id}
              
                   </Link>
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${orden.id}`
+                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
                     }
                   >
-                    {orden.created_at
-                        .slice(0, 10)
-                        .split("-")
-                        .reverse()
-                        .join("-")} 
-                        {/* <br></br> */}
-                        {" "}
-                    {orden.created_at.slice(11, 16)} 
+                    {refaccion.quantity}
+             
+                  </Link>
+                </td>
+                <td>
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    }
+                  >
+                    {refaccion.part_data[0].sae_key}
+             
+                  </Link>
+                </td>
+                <td>
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    }
+                  >
+                    {refaccion.part_data[0].description}
+             
+                  </Link>
+                </td>
+                <td>
+                  
 
+                <input
+                          type="number"
+                          className="col-6"
+                          id="price"
+                          name="price"
+                          // value={}
+                          onChange={handlePrecioChange}
+                          // onChange={(e) => {
+                          //   changeDiseñoInput(e, diseño);
+                          //   actualizarSubtotal(diseño);
+                          // }}
+                          autoComplete="off"
+                          // required
+                          // onWheel={(e) => {
+                          //   e.target.blur();
+                          // }}
+                        />
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={(e) => {
+                            handleClickPrecio(e, refaccion);
+                          }}
+                        >
+                          {"Actualizar precio"}
+                        
+                        </button>
+            <button
+                          className="btn btn-primary d-none"
+                          type="checkbox"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button>
              
-                  </Link>
+                
                 </td>
 
-                <td>
-                  <Link
-                    to={ `/ordenes-trabajo/orden/${orden.id}`
-                    }
-                  >
-                    {orden.asset_data.empresa}
-             
-                  </Link>
-                </td>
+                <td>{refaccion.status}
+            <button
+                          className="btn btn-primary btn-sm"
+                          onClick={(e) => {
+                            handleClick(e, refaccion);
+                          }}
+                        >
+                          {refaccion.status === "Suministrado" && "Por Suministrar"}
+                          {refaccion.status === "Por Suministrar" && "Suministrado"}
+                        </button>
+            <button
+                          className="btn btn-primary d-none"
+                          type="checkbox"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button>
+            </td>
 
-                <td>
-                  <Link
-                    to={ `/ordenes-trabajo/orden/${orden.id}`
-                    }
-                  >
-                    {orden.asset_data.numero_economico}
-             
-                  </Link>
-                </td>
+            <td>{refaccion.bought ? "SÍ" : "NO"}</td>
+
+        
+        
+
+     
                
                 
               </tr>

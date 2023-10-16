@@ -7,7 +7,7 @@ import { ReactReduxContext } from "../../context/reactReduxContext";
 import { fetchData } from "../../utils/fetchData";
 
 import { SearchInput } from "../../components/search-input/SearchInput";
-import { TablaOrdenesTrabajo } from "../../components/tabla-ordenes-trabajo/TablaOrdenesTrabajo";
+import { TablaRefaccionesCompras } from "../../components/tabla-refacciones-compras/TablaRefaccionesCompras";
 import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner";
 import { FormFiltrosUnidades } from "../../components/form-filtros-unidades/FormFiltrosUnidades";
 import { BotonesPaginacionTablas } from "../../components/botones-paginacion-tablas/BotonesPaginacionTablas";
@@ -23,7 +23,7 @@ import { BotonesPaginacionTablas } from "../../components/botones-paginacion-tab
 //   };
 
 export const ListaRefaccionesComprasPage  = () => {
-  const [ordenes, setOrdenes] = useState(null);
+  const [refacciones, setRefacciones] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [finalPage, setFinalPage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +48,7 @@ export const ListaRefaccionesComprasPage  = () => {
   const fetchUnidades = async (url) => {
     setIsLoading(true);
     const data = await fetchData(url ,authtoken, dispatch, setCurrentUser);
-    setOrdenes(data.results);
+    setRefacciones(data.results);
     setFinalPage(Math.ceil(data.count / 10));
 
     setIsLoading(false);
@@ -90,7 +90,7 @@ export const ListaRefaccionesComprasPage  = () => {
   return (
     <Container style={{ maxWidth: "100%", maxHeight: "100%" }}>
       <Row className="text-center mb-3">
-        <h3 className="m-0">Lista de Refacciones</h3>
+        <h3 className="m-0">Lista de Refacciones Compras</h3>
       </Row>
       
 
@@ -158,8 +158,8 @@ export const ListaRefaccionesComprasPage  = () => {
               </div>
             </div>
           )} */}
-          {/* <TablaOrdenesTrabajo ordenes={ordenes} setOrdenes={setOrdenes} /> */}
-          
+          <TablaRefaccionesCompras refacciones={refacciones} setRefacciones={setRefacciones} />
+          {/* <p>Tabla lista de refacciones </p> */}
           <BotonesPaginacionTablas
             currentPage={currentPage}
             finalPage={finalPage}

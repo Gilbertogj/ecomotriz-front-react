@@ -169,6 +169,7 @@ const handleClick = async (e, linea) => {
       }
 
       formData.append("status", status);
+      formData.append("bought", bought);
 
       let data = await fetch(
         `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${linea.id}/`,
