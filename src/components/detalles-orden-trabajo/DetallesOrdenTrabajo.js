@@ -103,8 +103,8 @@ export const DetallesOrdenTrabajo = ({ data }) => {
 
     if (data.status === 201 || data.status === 200) {
       setShow(true);
-      setCotizacionData(json);
-      actualizarEstatusBtnRef.current.disabled = true;
+      // setCotizacionData(json);
+      // actualizarEstatusBtnRef.current.disabled = true;
     }
   };
 
