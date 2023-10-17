@@ -103,66 +103,24 @@ export const ComprasPage = () => {
           </div>
         </Route>
 
-
-
-
-
-
-
-
-
-
-
-
-
         <Route exact path={`${path}/orden/:id`}>
           <div className="p-3">
+            {/* <ListaRefaccionesComprasPage /> */}
             <DetallesOrdenTrabajoPage />
-            {/* <p>hola</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidades-orden`}>
-          <div className="p-3">
-            <ListaUnidadesPage />
-            {/* <p>pagina para agreagr orden</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidades-orden/:id`}>
-          <div className="p-3">
-            <UnidadOrdenPage />
-            {/* <p>detalle de la unidad para orden</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidades-orden/:id/crear-orden`}>
-          <div className="p-3">
-            <UnidadOrdenPage />
-            {/* <p>pantalla para crear orden</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/orden/:id/crear-solicitud`}>
-          <div className="p-3">
-            <DetallesOrdenTrabajoPage />
-            {/* <p>hola</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/orden/:id/fallas-encontradas`}>
-          <div className="p-3">
-            <DetallesOrdenTrabajoPage />
-            {/* <p>hola</p> */}
+            {/* <p>Tabla detalle orden </p> */}
           </div>
         </Route>
 
         <Route exact path={`${path}/orden/:idOrden/solicitud-refacciones/:idSolicitud`}>
           <div className="p-3">
-            <DetallesSolicitudRefaccionesPage />
-            {/* <p>hola si funciona</p> */}
+            {/* <DetallesSolicitudRefaccionesPage /> */}
+            <p>hola si funciona</p>
           </div>
         </Route>
+
+
+
+
 
 
 
@@ -174,104 +132,6 @@ export const ComprasPage = () => {
 
 
        
-        
-
-
-        <Route exact path={`${path}/agregar-unidad`}>
-          <div className="p-3">
-            <AgregarUnidadPage />
-            
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidad/:id/informacion-financiera/:idFinanzas`}>
-          <div className="p-3">
-          <InformacionFinancieraPage/>
-            {/* <p>pagina de financiera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/agregar-informacion-financiera/:id`}>
-          <div className="p-3">
-          <AgregarInformacionFinancieraPage/>
-            {/* <p>pagina de finakkknciera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidad/:id/seguro/:idSeguro`}>
-          <div className="p-3">
-          <SeguroUnidadPage/>
-            {/* <p>pagina de financiera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/agregar-seguro/:id`}>
-          <div className="p-3">
-          <AgregarSeguroPage/>
-            {/* <p>pagina de finakkknciera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidad/:id/transito/:idTransito`}>
-          <div className="p-3">
-          <TransitoUnidadPage/>
-            {/* <p>pagina de financiera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/agregar-transito/:id`}>
-          <div className="p-3">
-          <AgregarTransitoPage/>
-            {/* <p>pagina de financiera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/editar-unidad/:id`}>
-          <div className="p-3">
-            <EditarUnidadPage/>
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/unidad/:id/inventario`}>
-          <div className="p-3">
-            {/* <p>pagina ver inventario</p> */}
-            <TablaInventario/>
-
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/agregar-inventario/:id`}>
-          <div className="p-3">
-          <AgregarInventarioPage/>
-            {/* <p>pagina de financiera unidad</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/informacion-financiera/:id/facturas`}>
-          <div className="p-3">
-          <TablaFacturas/>
-            {/* <p>pagina de flas facturas</p> */}
-          </div>
-        </Route>
-
-        <Route exact path={`${path}/agregar-facturas/:id`}>
-          <div className="p-3">
-          <AgregarFacturaPage/>
-            {/* <p>pagina de agregar </p> */}
-          </div>
-        </Route>
-
-       
-
-        
-
-      
-
-
-
-
-
-
 
 
 

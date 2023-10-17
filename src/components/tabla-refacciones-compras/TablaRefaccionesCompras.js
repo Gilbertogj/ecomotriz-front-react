@@ -309,25 +309,25 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
               >
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    to={ `/compras/orden/${refaccion.work_order_id}`
                     }
                   >
-                    {refaccion.id}
+                    {refaccion.folio_order}
              
                   </Link>
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    to={ `/compras/orden/${refaccion.work_order_id}`
                     }
                   >
-                    {refaccion.id}
+                    {refaccion.folio_part_requests}
              
                   </Link>
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    to={ `/compras/orden/${refaccion.work_order_id}`
                     }
                   >
                     {refaccion.quantity}
@@ -336,7 +336,7 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    to={ `/compras/orden/${refaccion.work_order_id}`
                     }
                   >
                     {refaccion.part_data[0].sae_key}
@@ -345,7 +345,7 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
                 </td>
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${refaccion.parts_request}`
+                    to={ `/compras/orden/${refaccion.work_order_id}`
                     }
                   >
                     {refaccion.part_data[0].description}

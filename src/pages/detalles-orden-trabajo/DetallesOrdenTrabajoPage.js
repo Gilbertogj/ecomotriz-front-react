@@ -33,6 +33,9 @@ export const DetallesOrdenTrabajoPage = () => {
         <SolicitudRefacciones ordenTrabajoData={data} />
       ) : pathname.includes("fallas-encontrada") ? (
         <FallasEncontradas ordenTrabajoData={data} />
+      ) : pathname.includes("compras") ? (
+        <DetallesOrdenTrabajo data={data} />
+        // <p>Tabla detalle orden compras </p>
       ) : (
         <DetallesOrdenTrabajo data={data} />
       )}  

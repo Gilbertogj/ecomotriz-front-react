@@ -28,12 +28,12 @@ const diseñosInitialState = [
     estado:"",
   },
 ];
-export const OrdenTrabajoPreview = ({
+export const OrdenTrabajoCompras = ({
   ordenTrabajoData,
   form,
   handleSubmit,
   handleChange,
-  handleDescargarPdf,
+//   handleDescargarPdf,
   actualizarEstatusBtnRef,
 }) => {
   const isDesktop = useIsDesktop();
@@ -253,7 +253,7 @@ export const OrdenTrabajoPreview = ({
         title="Falla encontrada eliminada"
       />
     <div className="cotizacion-container">
-      <div className="d-flex justify-content-md-between justify-content-center mb-1 mb-md-5 actualizar-estatus">
+      {/* <div className="d-flex justify-content-md-between justify-content-center mb-1 mb-md-5 actualizar-estatus">
         <form
           className="d-flex flex-column flex-md-row align-items-center align-items-md-end mt-3"
           onSubmit={handleSubmit}
@@ -286,13 +286,13 @@ export const OrdenTrabajoPreview = ({
 
           
         </form>
-        {/* {isDesktop && (
+        {isDesktop && (
           <div className="d-flex align-items-end">
             <button className="btn btn-success" onClick={handleDescargarPdf}>
               Descargar PDF
             </button>
           </div>
-        )} */}
+        )}
 
         
       </div>
@@ -313,6 +313,18 @@ export const OrdenTrabajoPreview = ({
               to={`/ordenes-trabajo/orden/${ordenTrabajoData.id}/crear-solicitud`}
               className="btn btn-primary"
             >Agregar Solicitud de refacciones
+            </Link>
+        
+
+         
+        </div> */}
+
+        <div className="d-flex justify-content-end mb-3">
+            
+            <Link
+              to={`/compras/lista-refacciones/`}
+              className="btn btn-secondary"
+            >Regresar
             </Link>
         
 
@@ -617,7 +629,7 @@ export const OrdenTrabajoPreview = ({
 
                   <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${ordenTrabajoData.id}/solicitud-refacciones/${linea.id}`
+                    to={ `/compras/orden/${ordenTrabajoData.id}/solicitud-refacciones/${linea.id}`
                     }
                   >{linea.folio}
                   </Link>
@@ -625,7 +637,7 @@ export const OrdenTrabajoPreview = ({
                      
                 <td>
                   <Link
-                    to={ `/ordenes-trabajo/orden/${ordenTrabajoData.id}/solicitud-refacciones/${linea.id}`
+                    to={ `/compras/orden/${ordenTrabajoData.id}/solicitud-refacciones/${linea.id}`
                     }
                   >{linea.price}
                   </Link>

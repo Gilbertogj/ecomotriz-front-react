@@ -237,10 +237,22 @@ const handleClick = async (e, linea) => {
         title="Linea refaccion actualizada"
       />
     <div className="cotizacion-container">
-      
+    <div className="d-flex justify-content-end mb-3">
+            
+            <Link
+              to={pathname.includes('/compras') ? '/compras/lista-refacciones' : `/ordenes-trabajo/orden/${ordenTrabajoData.id}`}
+              className="btn btn-secondary"
+            >Regresar
+            </Link>
+        
+
+         
+        </div>
     
 
       {dataFetched ? ( // Check if the data has been fetched
+
+      
 
 
       

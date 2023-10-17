@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+
+import { useParams, useLocation, useHistory  } from "react-router-dom";
 
 import { ReactReduxContext } from "../../context/reactReduxContext";
 import { setCurrentUser } from "../../redux/user/userSlice";
@@ -8,6 +9,7 @@ import { SuccessModal } from "../success-modal/SuccessModal";
 import { CotizacionEdicion } from "../cotizacion-edicion/CotizacionEdicion";
 import { CotizacionPreview } from "../cotizacion-preview/CotizacionPreview";
 import { OrdenTrabajoPreview } from "../orden-trabajo-preview/OrdenTrabajoPreview";
+import { OrdenTrabajoCompras } from "../orden-trabajo-compras/OrdenTrabajoCompras";
 import { CotizacionPdfDocument } from "../cotizacion-pdf-document/CotizacionPdfDocument";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { toPng } from "html-to-image";
@@ -22,6 +24,7 @@ export const DetallesOrdenTrabajo = ({ data }) => {
   const [ordenTrabajoData, setCotizacionData] = useState(data);
   const [editMode, setEditMode] = useState(false);
   const [imgSrcUrl, setImgSrcUrl] = useState("");
+  const { pathname } = useLocation();
 
   const { authtoken, dispatch, userRol } = useContext(ReactReduxContext);
 
@@ -158,29 +161,29 @@ export const DetallesOrdenTrabajo = ({ data }) => {
   //   }
   // };
 
-  // const handleDescargarPdf = async (e) => {
-  //   try {
-  //     e.target.disabled = true;
-  //     e.target.textContent = "Descargando...";
+  const handleDescargarPdf = async (e) => {
+    try {
+      e.target.disabled = true;
+      e.target.textContent = "Descargando...";
 
-  //     const toImageNode = document.querySelector(".to-image");
+      const toImageNode = document.querySelector(".to-image");
 
-  //     const imageSrcUrl = await toPng(toImageNode);
+      const imageSrcUrl = await toPng(toImageNode);
 
-  //     setImgSrcUrl(imageSrcUrl);
+      setImgSrcUrl(imageSrcUrl);
 
-  //     setTimeout(() => {
-  //       document.querySelector(".download-btn").click();
-  //       e.target.textContent = "Descargar PDF";
-  //       e.target.disabled = false;
-  //     }, 3000);
-  //   } catch (error) {
-  //     e.target.textContent = "Descargar PDF";
-  //     e.target.disabled = false;
-  //     console.log(error);
-  //     alert(error);
-  //   }
-  // };
+      setTimeout(() => {
+        document.querySelector(".download-btn").click();
+        e.target.textContent = "Descargar PDF";
+        e.target.disabled = false;
+      }, 3000);
+    } catch (error) {
+      e.target.textContent = "Descargar PDF";
+      e.target.disabled = false;
+      console.log(error);
+      alert(error);
+    }
+  };
 
   return (
     <>
@@ -215,6 +218,15 @@ export const DetallesOrdenTrabajo = ({ data }) => {
 
           {editMode ? (
             <CotizacionEdicion ordenTrabajoData={data} />
+          ) : pathname.includes("compras") ? (
+            <OrdenTrabajoCompras  
+            ordenTrabajoData={ordenTrabajoData}
+            form={form}
+            handleSubmit={handleSubmit}
+            handleChange={handleChange}
+            handleDescargarPdf={handleDescargarPdf}
+            actualizarEstatusBtnRef={actualizarEstatusBtnRef} />
+            // <p>Tabla detalle orden compras 2 </p>
           ) : (
             <>
               <OrdenTrabajoPreview
@@ -244,7 +256,7 @@ export const DetallesOrdenTrabajo = ({ data }) => {
                 text="Se ha actualizado la orden de trabajo correctamente"
               />
             </>
-          )}
+          ) }
         </>
       
     </>
