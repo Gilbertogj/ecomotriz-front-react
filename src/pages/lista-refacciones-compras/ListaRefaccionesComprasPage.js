@@ -41,7 +41,7 @@ export const ListaRefaccionesComprasPage  = () => {
     useContext(ReactReduxContext);
 
   useEffect(() => {
-    fetchUnidades(`https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/`);
+    fetchUnidades(`https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/?bought=true`);
   }, [authtoken]);
   // console.log(authtoken);
 
@@ -59,7 +59,7 @@ export const ListaRefaccionesComprasPage  = () => {
     const newCurrentPage = currentPage + num;
 
     fetchUnidades(
-      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/?page=${newCurrentPage}`
+      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/?bought=true&page=${newCurrentPage}`
     );
 
     setCurrentPage(newCurrentPage);
