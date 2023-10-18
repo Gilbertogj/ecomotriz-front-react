@@ -290,6 +290,105 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
 
 
 
+  // const handleSumbit = async (e) => {
+  //   e.preventDefault();
+
+    
+
+  
+
+  //   const fechaFiltroFormatted = `${fechaHoy.getFullYear()}-${String(
+  //     fechaHoy.getMonth() + 1
+  //   ).padStart(2, 0)}-${fechaHoy.getDate()}`;
+
+  //   const formattedParts = [];
+
+  //   parts.forEach((parte) => {
+  //     const obj = {
+       
+        
+  //       part: parte.producto,
+
+
+  //       price: "0",
+
+
+  //     };
+
+  //     formattedParts.push(obj);
+
+  //   });
+
+  //   let falla=0;
+
+  //   formattedParts.forEach((formattedPart) => {
+  //    falla= formattedPart.part;
+  //   });
+
+   
+  //   console.log(falla);
+
+
+
+  //   const dict_data = {
+  
+  
+  //     work_order: String(ordenTrabajoData.id),
+  
+
+  //     found_fault: falla,
+   
+  //   };
+
+  //   console.log(formattedParts)
+
+  //   let data = await fetch(
+  //     "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaultslines/",
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Token ${authtoken}`,
+  //       },
+  //       body: JSON.stringify(dict_data),
+  //     }
+  //   );
+
+  //   // console.log(dict_data);
+
+  //   let json = await data.json();
+
+  //   if (json.expired) {
+  //     dispatch(setCurrentUser({ token: json.token }));
+
+  //     data = await fetch(
+  //       "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Token ${json.token}`,
+  //         },
+  //         body: JSON.stringify(dict_data),
+  //       }
+  //     );
+
+  //     json = await data.json();
+  //   }
+
+  //   if (data.status === 201) {
+  //     /* alert("Se ha creado correctamente la cotización."); */
+
+  //     setShowConfirmModal(true);
+
+  //     /* history.push(`/concreco/comercializacion/cotizaciones`); */
+  //   } else if (data.status === 406) {
+  //     alert(json.error);
+  //   } else {
+  //     alert(JSON.stringify(json));
+  //   }
+  // };
+
   const handleSumbit = async (e) => {
     e.preventDefault();
 
@@ -307,10 +406,14 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
       const obj = {
        
         
-        part: parte.producto,
+        found_fault: parte.producto,
+        work_order: String(ordenTrabajoData.id),
 
 
-        price: "0",
+        
+
+
+       
 
 
       };
@@ -323,20 +426,25 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
 
     formattedParts.forEach((formattedPart) => {
      falla= formattedPart.part;
+     console.log(falla);
     });
 
    
-    console.log(falla);
+    console.log(formattedParts);
 
 
 
     const dict_data = {
   
   
-      work_order: String(ordenTrabajoData.id),
+      // price: 0,
+      // work_order: String(ordenTrabajoData.id),
   
 
-      found_fault: falla,
+      found_fault_lines: formattedParts,
+  
+
+     
    
     };
 
@@ -350,7 +458,7 @@ export const FallasEncontradas = ({ ordenTrabajoData }) => {
           "Content-Type": "application/json",
           Authorization: `Token ${authtoken}`,
         },
-        body: JSON.stringify(dict_data),
+        body: JSON.stringify(formattedParts),
       }
     );
 

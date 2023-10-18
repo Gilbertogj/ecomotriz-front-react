@@ -184,6 +184,9 @@ export const DetallesOrdenTrabajo = ({ data }) => {
       alert(error);
     }
   };
+  const handleReload = () => {
+    window.location.reload(); // Reload the page when the button is clicked
+  };
 
   return (
     <>
@@ -251,6 +254,8 @@ export const DetallesOrdenTrabajo = ({ data }) => {
                 show={show}
                 handleClose={() => {
                   setShow(false);
+                  handleReload();
+                  
                 }}
                 title="Orden de Trabajo Actualizada"
                 text="Se ha actualizado la orden de trabajo correctamente"

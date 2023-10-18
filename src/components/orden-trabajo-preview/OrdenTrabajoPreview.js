@@ -13,6 +13,29 @@ import Tarjetas from "../../assets/img/tarjetas.png";
 import Credito from "../../assets/img/credito.png";
 import { SuccessModal } from "../success-modal/SuccessModal";
 
+
+const partsInitialState = [
+  {
+    id: 1,
+
+ 
+    price:"",
+    description:"",
+    partsData:[],
+    busquedaString:"",
+    producto:"",
+    rack:"",
+    fault:"",
+
+
+    
+
+
+  },
+];
+
+
+
 const diseñosInitialState = [
   {
     id: 1,
@@ -40,22 +63,35 @@ export const OrdenTrabajoPreview = ({
   const [diseños, setDiseños] = useState(diseñosInitialState);
   const { authtoken, dispatch } = useContext(ReactReduxContext);
   const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [parts, setParts] = useState(partsInitialState);
 
   console.log(form.estado)
 
-  const getDiseños = async (e, diseñoRef) => {
-    setDiseños((prevState) => {
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+
+
+  const getPartes = async (e, parteRef) => {
+    setParts((prevState) => {
       const arr = [...prevState];
 
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        precios: [],
+      arr[parteRef.id - 1] = {
+        ...arr[parteRef.id - 1],
+       
       };
 
       return arr;
     });
 
-    const url = `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/productos/?ubicacion=${form.ciudad}&diseño=${e.target.value}`;
+    const url = `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaults/?fault=${e.target.value}`;
 
     let data = await fetch(url, {
       headers: {
@@ -77,90 +113,83 @@ export const OrdenTrabajoPreview = ({
       json = await data.json();
     }
 
-    setDiseños((prevState) => {
+    setParts((prevState) => {
       const arr = [...prevState];
 
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        diseñosData: json.results,
+      arr[parteRef.id - 1] = {
+        ...arr[parteRef.id - 1],
+        partsData: json.results,
       };
 
       return arr;
     });
   };
-  const changeDiseñoInput = (e, diseñoRef) => {
-    setDiseños((prevState) => {
+
+  const changeParteInput = (e, parteRef) => {
+    setParts((prevState) => {
       const arr = [...prevState];
 
+    
       if (e.target.name === "busquedaString") {
-        arr[diseñoRef.id - 1] = {
-          ...arr[diseñoRef.id - 1],
-          precioUnitario: "",
-          nombre: "",
+        arr[parteRef.id - 1] = {
+          ...arr[parteRef.id - 1],
+          description:"",
           producto: "",
+          rack:"",
+          
+         
         };
       }
 
-      if (e.target.name === "nombre") {
-        arr[diseñoRef.id - 1] = {
-          ...arr[diseñoRef.id - 1],
-          precioUnitario: "",
+      if (e.target.name === "description") {
+        arr[parteRef.id - 1] = {
+          ...arr[parteRef.id - 1],
+          rack: "",
+       
         };
       }
 
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
+      arr[parteRef.id - 1] = {
+        ...arr[parteRef.id - 1],
         [`${e.target.name}`]: e.target.value,
       };
-
       return arr;
     });
   };
 
-  const agregarDiseño = () => {
-    setDiseños((prevState) => {
+
+  const agregarParte = () => {
+    setParts((prevState) => {
       const newArr = [...prevState];
 
       newArr.push({
-        id: diseños.length + 1,
-        busquedaString: "",
-        nombre: "",
-        precioUnitario: "",
-        cantidad: "",
-        diseñosData: [],
-        precios: [],
-        subtotal: "",
-        producto: "",
-        unidad: "",
+        id: parts.length + 1,
+   
+
+        price:"",
+        description:"",
+        partsData:[],
+        busquedaString:"",
+        producto:"",
+        rack:"",
+  
+       
       });
 
       return newArr;
     });
+    
+    
   };
 
-  const eliminarDiseño = () => {
-    setDiseños((prevState) => {
+  const eliminarParte = () => {
+    setParts((prevState) => {
       const newArr = [...prevState];
       newArr.pop();
       return newArr;
     });
   };
-  const actualizarSubtotal = (diseñoRef) => {
-    setDiseños((prevState) => {
-      const arr = [...prevState];
 
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        subtotal:
-          prevState[diseñoRef.id - 1].precioUnitario &&
-          prevState[diseñoRef.id - 1].cantidad &&
-          Number(prevState[diseñoRef.id - 1].precioUnitario) *
-            Number(prevState[diseñoRef.id - 1].cantidad),
-      };
-
-      return arr;
-    });
-  };
 
   const handleClick = async (e, linea) => {
     try {
@@ -241,8 +270,115 @@ export const OrdenTrabajoPreview = ({
     }
   };
 
+
   const handleReload = () => {
     window.location.reload(); // Reload the page when the button is clicked
+  };
+
+  const handleSumbit = async (e) => {
+    e.preventDefault();
+
+    
+
+  
+
+
+
+    const formattedParts = [];
+
+    parts.forEach((parte) => {
+      const obj = {
+       
+        
+        found_fault: parte.producto,
+        work_order: String(ordenTrabajoData.id),
+
+
+        
+
+
+       
+
+
+      };
+
+      formattedParts.push(obj);
+
+    });
+
+    let falla=0;
+
+    formattedParts.forEach((formattedPart) => {
+     falla= formattedPart.part;
+     console.log(falla);
+    });
+
+   
+    console.log(formattedParts);
+
+
+
+    const dict_data = {
+  
+  
+      // price: 0,
+      // work_order: String(ordenTrabajoData.id),
+  
+
+      found_fault_lines: formattedParts,
+  
+
+     
+   
+    };
+
+    console.log(formattedParts)
+
+    let data = await fetch(
+      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaultslines/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${authtoken}`,
+        },
+        body: JSON.stringify(formattedParts),
+      }
+    );
+
+    // console.log(dict_data);
+
+    let json = await data.json();
+
+    if (json.expired) {
+      dispatch(setCurrentUser({ token: json.token }));
+
+      data = await fetch(
+        "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partsrequests/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${json.token}`,
+          },
+          body: JSON.stringify(dict_data),
+        }
+      );
+
+      json = await data.json();
+    }
+
+    if (data.status === 201) {
+      /* alert("Se ha creado correctamente la cotización."); */
+
+      // setShowConfirmModal(true);
+
+      /* history.push(`/concreco/comercializacion/cotizaciones`); */
+    } else if (data.status === 406) {
+      alert(json.error);
+    } else {
+      alert(JSON.stringify(json));
+    }
   };
 
   return (
@@ -296,6 +432,10 @@ export const OrdenTrabajoPreview = ({
 
         
       </div>
+
+
+
+    
       <div className="d-flex justify-content-end mb-3">
             
             <Link
@@ -318,6 +458,19 @@ export const OrdenTrabajoPreview = ({
 
          
         </div>
+
+        {ordenTrabajoData.status === "Closed" && (
+  <div className="d-flex justify-content-end mb-3">
+    <Link
+      to={`/ordenes-trabajo/orden/${ordenTrabajoData.id}/crear-solicitud`}
+      className="btn btn-success"
+    >
+      Agregar Solicitud de refacciones
+    </Link>
+  </div>
+)}
+
+
 
       
 
@@ -535,7 +688,7 @@ export const OrdenTrabajoPreview = ({
                     <tr>
                       <th className="col-11">
                         <div className="d-flex justify-content-center">
-                          Fallas ecnontradas
+                          Fallas encontradas
                         </div>
                       </th>
                       <th className="col-1">
@@ -547,13 +700,99 @@ export const OrdenTrabajoPreview = ({
                     </tr>
                   </thead>
                   <tbody className="table-body">
+                  {parts.map((parte) => (
+                      <tr key={parte.id}>
+                        <td className="col-12">
+                          <input
+                            type="text"
+                            className="col-4"
+                            name="busquedaString"
+                            value={parte.busquedaString}
+                            autoComplete="off"
+                            onChange={(e) => {
+                              getPartes(e, parte);
+                              changeParteInput(e, parte);
+                              
+                            }}
+                          />
+                          <select
+                            className="col-8"
+                            name="description"
+                            value={parte.description}
+                            required
+                            onChange={(e) => {
+                              const newArr = parts[
+                                parte.id - 1
+                              ].partsData.filter(
+                                (a) => a.fault === e.target.value
+                              );
+
+                              console.log(newArr);
+
+                              // const precios = [];
+
+                              // if (newArr[0].precio_contado.trim()) {
+                              //   precios.push(newArr[0].precio_contado);
+                              // }
+                           
+
+                              setParts((prevState) => {
+                                const arr = [...prevState];
+
+                                arr[parte.id - 1] = {
+                                  ...arr[parte.id - 1],
+                                 
+                                  producto: newArr[0].id,
+                                };
+
+                                return arr;
+                              });
+
+                              changeParteInput(e, parte);
+                       
+                            }}
+                          >
+                            <option></option>
+                            {parte.partsData.map((data) => (
+                              <option key={data.id} value={data.fault}>
+                                {data.job_code} {"-"} {data.fault}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+
+                        <td>
+                        <input
+                type="submit"
+                className="btn btn-success"
+                value="Agregar"
+              />
+                        </td>
+                        
+                      
+                       
+                          
+                     
+                     
+                      </tr>
+
+                      
+                    ))}
+
+
+
+
+
+
+
+
                   {ordenTrabajoData.found_fault_lines.map((linea, i) => (
                     <tr key={i}>
-                      <td>{linea.found_fault.fault}
+                      <td className="col-10">{linea.found_fault_data.fault}
                       
           </td>
 
-                        <td>
+                        <td className="col-2">
                       
                       <button
                           className="btn btn-danger btn-sm"
@@ -561,12 +800,12 @@ export const OrdenTrabajoPreview = ({
                             handleClick(e, linea);
                           }}
                         >
-                          {linea.found_fault.fault && "Eliminar"}
+                          {linea.found_fault_data.id && "Eliminar"}
                          
                         </button>
             <button
                           className="btn btn-danger d-none"
-                          type="checkbox"
+                          type="button"
                           
                         >
                           <span
@@ -582,10 +821,37 @@ export const OrdenTrabajoPreview = ({
             ))}
                   </tbody>
                 </table>
+
+
+
+
+
+
               </div>
             </div>
 
+            <div className="mt-3 d-flex justify-content-between">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={agregarParte}
+              >
+                Agregar Falla
+              </button>
+              {parts.length > 1 && (
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={eliminarParte}
+                >
+                  Eliminar Falla
+                </button>
+              )}
+            </div>
+
             <div>
+
+              
             <div className="text-center m-3">
           <h3>Solicitudes de Refacciones</h3>
         </div>
@@ -669,6 +935,8 @@ export const OrdenTrabajoPreview = ({
         
       </div>
     </div>
+
+
     </>
   );
 };

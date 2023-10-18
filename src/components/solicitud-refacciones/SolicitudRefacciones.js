@@ -10,6 +10,7 @@ import { fetchDataWithoutAuthentication } from "../../utils/fetchDataWithoutAuth
 
 import { CotizacionModal } from "../cotizacion-modal/CotizacionModal";
 import { ModalRedirect } from "../modal-redirect/ModalRedirect";
+import { SuccessModal } from "../success-modal/SuccessModal";
 
 import Localizacion from "../../assets/img/Localizacion.png";
 import Telefono from "../../assets/img/telefono.png";
@@ -87,7 +88,8 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
   const [form, setForm] = useState(initialState);
 
   const [obraData, setObraData] = useState({});
-  const [show, setShow] = useState(true);
+  // const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   // const [diseños, setDiseños] = useState(diseñosInitialState);
   // const [fallas, setFallas] = useState(fallasInitialState);
@@ -367,8 +369,9 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
 
     if (data.status === 201) {
       /* alert("Se ha creado correctamente la cotización."); */
+      setShow(true);
 
-      setShowConfirmModal(true);
+      // setShowConfirmModal(true);
 
       /* history.push(`/concreco/comercializacion/cotizaciones`); */
     } else if (data.status === 406) {
@@ -376,6 +379,11 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
     } else {
       alert(JSON.stringify(json));
     }
+  };
+
+  const handleReload = () => {
+    const specificPageURL = `/ordenes-trabajo/orden/${ordenTrabajoData.id}`; 
+    window.location.reload(specificPageURL); // Reload the page when the button is clicked
   };
 
   return (
@@ -397,11 +405,23 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
 
          
         </div>
-          <ModalRedirect
+          {/* <ModalRedirect
             showConfirmModal={showConfirmModal}
+            handleClose={handleReload}
             text="Se ha creado correctamente la Solicitude de Refacciones"
-            link={`/ordenes-trabajo/orden/${ordenTrabajoData.id}`}
-          />
+            // link={`/ordenes-trabajo/orden/${ordenTrabajoData.id}`}
+          /> */}
+
+             <SuccessModal
+                show={show}
+                handleClose={() => {
+                  // setShow(false);
+                  handleReload();
+                  
+                }}
+                title="Operacion exitosa"
+                text="Se ha creado correctamente la Solicitude de Refacciones"
+              />
           <form onSubmit={handleSumbit}>
             <div className="cotizacion-header-container">
               {/* <div className="d-flex align-items-center">
