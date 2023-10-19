@@ -26,13 +26,22 @@ const partsInitialState = [
     producto:"",
     rack:"",
     fault:"",
+  },
+];
 
+const serviciosInitialState = [
+  {
+    id: 1,
 
-    
-
+ 
+    price:"",
+    notes:"",
+    labor_type:"",
+    user:"",
 
   },
 ];
+
 
 
 
@@ -65,6 +74,7 @@ export const OrdenTrabajoPreview = ({
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [parts, setParts] = useState(partsInitialState);
+  const [servicios, setServicios] = useState(serviciosInitialState);
 
   console.log(form.estado)
 
@@ -158,37 +168,6 @@ export const OrdenTrabajoPreview = ({
   };
 
 
-  const agregarParte = () => {
-    setParts((prevState) => {
-      const newArr = [...prevState];
-
-      newArr.push({
-        id: parts.length + 1,
-   
-
-        price:"",
-        description:"",
-        partsData:[],
-        busquedaString:"",
-        producto:"",
-        rack:"",
-  
-       
-      });
-
-      return newArr;
-    });
-    
-    
-  };
-
-  const eliminarParte = () => {
-    setParts((prevState) => {
-      const newArr = [...prevState];
-      newArr.pop();
-      return newArr;
-    });
-  };
 
 
   const handleClick = async (e, linea) => {
@@ -218,7 +197,7 @@ export const OrdenTrabajoPreview = ({
       // formData.append("bought", bought);
 
       let data = await fetch(
-        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaults/${linea.id}/`,
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaultslines/${linea.id}/`,
         {
           method: "DELETE",
           headers: {
@@ -228,27 +207,29 @@ export const OrdenTrabajoPreview = ({
         }
       );
 
-      let json = await data.json();
+      // let json = await data.json();
 
-      if (json.expired) {
-        dispatch(setCurrentUser({ token: json.token }));
+      // if (json.expired) {
+      //   dispatch(setCurrentUser({ token: json.token }));
 
-        data = await fetch(
-          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaults/${linea.id}/`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Token ${json.token}`,
-            },
+      //   data = await fetch(
+      //     `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/foundfaultslines/${linea.id}/`,
+      //     {
+      //       method: "DELETE",
+      //       headers: {
+      //         Authorization: `Token ${json.token}`,
+      //       },
        
-          }
-        );
+      //     }
+      //   );
 
-        json = await data.json();
-      }
+      //   // json = await data.json();
+      // // }
+      // handleReload();
 
-      if (data.status === 204 || data.status === 200) {
-        setShow(true);
+      if (data.status === 204 || data.status === 200 || data.status === 201) {
+        // setShow(true);
+        handleReload();
         // setPedidos((prevState) => {
         //   const arr = [...prevState];
 
@@ -263,7 +244,7 @@ export const OrdenTrabajoPreview = ({
       }
     } catch (error) {
       console.log(error);
-      alert(error);
+      // alert(error);
     } finally {
       e.target.nextSibling.classList.add("d-none");
       e.target.classList.remove("d-none");
@@ -314,7 +295,7 @@ export const OrdenTrabajoPreview = ({
     });
 
    
-    console.log(formattedParts);
+    console.log(formattedParts.found_fault);
 
 
 
@@ -325,7 +306,9 @@ export const OrdenTrabajoPreview = ({
       // work_order: String(ordenTrabajoData.id),
   
 
-      found_fault_lines: formattedParts,
+      found_fault: formattedParts[0].found_fault,
+      work_order: String(ordenTrabajoData.id),
+
   
 
      
@@ -342,7 +325,7 @@ export const OrdenTrabajoPreview = ({
           "Content-Type": "application/json",
           Authorization: `Token ${authtoken}`,
         },
-        body: JSON.stringify(formattedParts),
+        body: JSON.stringify(dict_data),
       }
     );
 
@@ -369,6 +352,7 @@ export const OrdenTrabajoPreview = ({
     }
 
     if (data.status === 201) {
+      handleReload();
       /* alert("Se ha creado correctamente la cotización."); */
 
       // setShowConfirmModal(true);
@@ -655,7 +639,7 @@ export const OrdenTrabajoPreview = ({
                 </table>
               </div>
             </div>
-
+            
             <div>
               <div className="table-responsive">
                 <table className="w-100 blue-table tabla-diseños">
@@ -680,34 +664,38 @@ export const OrdenTrabajoPreview = ({
                 </table>
               </div>
             </div>
-
+            
+           
+            
             <div>
               <div className="table-responsive">
                 <table className="w-100 blue-table tabla-diseños">
                   <thead>
                     <tr>
-                      <th className="col-11">
+                      <th className="col-12" colSpan="2">
                         <div className="d-flex justify-content-center">
                           Fallas encontradas
                         </div>
                       </th>
-                      <th className="col-1">
+                      {/* <th className="col-1">
                         <div className="d-flex justify-content-center">
                         
                         </div>
-                      </th>
+                      </th> */}
                      
                     </tr>
                   </thead>
+              
                   <tbody className="table-body">
                   {parts.map((parte) => (
                       <tr key={parte.id}>
-                        <td className="col-12">
+                        <td className="col-11">
                           <input
                             type="text"
                             className="col-4"
                             name="busquedaString"
                             value={parte.busquedaString}
+                            placeholder="Busqueda de falla"
                             autoComplete="off"
                             onChange={(e) => {
                               getPartes(e, parte);
@@ -719,7 +707,7 @@ export const OrdenTrabajoPreview = ({
                             className="col-8"
                             name="description"
                             value={parte.description}
-                            required
+                       
                             onChange={(e) => {
                               const newArr = parts[
                                 parte.id - 1
@@ -729,12 +717,6 @@ export const OrdenTrabajoPreview = ({
 
                               console.log(newArr);
 
-                              // const precios = [];
-
-                              // if (newArr[0].precio_contado.trim()) {
-                              //   precios.push(newArr[0].precio_contado);
-                              // }
-                           
 
                               setParts((prevState) => {
                                 const arr = [...prevState];
@@ -761,12 +743,29 @@ export const OrdenTrabajoPreview = ({
                           </select>
                         </td>
 
-                        <td>
-                        <input
-                type="submit"
-                className="btn btn-success"
-                value="Agregar"
-              />
+                        <td className="col-1">
+     
+              <button
+                          className="btn btn-success btn-sm col-12"
+                          onClick={(e) => {
+                            handleSumbit(e);
+                          }}
+                        >
+                          {"Agregar"}
+                         
+                        </button>
+            <button
+                          className="btn btn-danger d-none col-12"
+                          type="button"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button>
                         </td>
                         
                       
@@ -790,12 +789,12 @@ export const OrdenTrabajoPreview = ({
                     <tr key={i}>
                       <td className="col-10">{linea.found_fault_data.fault}
                       
-          </td>
+                      </td>
 
                         <td className="col-2">
                       
                       <button
-                          className="btn btn-danger btn-sm"
+                          className="btn btn-danger btn-sm col-12"
                           onClick={(e) => {
                             handleClick(e, linea);
                           }}
@@ -820,6 +819,7 @@ export const OrdenTrabajoPreview = ({
                     
             ))}
                   </tbody>
+            
                 </table>
 
 
@@ -829,8 +829,9 @@ export const OrdenTrabajoPreview = ({
 
               </div>
             </div>
+          
 
-            <div className="mt-3 d-flex justify-content-between">
+            {/* <div className="mt-3 d-flex justify-content-between">
               <button
                 type="button"
                 className="btn btn-success"
@@ -847,7 +848,7 @@ export const OrdenTrabajoPreview = ({
                   Eliminar Falla
                 </button>
               )}
-            </div>
+            </div> */}
 
             <div>
 
@@ -901,6 +902,163 @@ export const OrdenTrabajoPreview = ({
                    
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+
+
+
+            <div>
+            <div className="text-center m-3">
+          <h3>Mano de obra</h3>
+        </div>
+              <div className="table-responsive">
+                <table className="w-100 blue-table tabla-diseños">
+                  <thead>
+                    <tr>
+                      <th className="col-4" colSpan="1">
+                        <div className="d-flex justify-content-center">
+                          Tipo de trabajo 
+                        </div>
+                      </th>
+                      <th className="col-2" colSpan="1">
+                        <div className="d-flex justify-content-center">
+                          Precio
+                        </div>
+                      </th>
+                      <th className="col-3" colSpan="1">
+                        <div className="d-flex justify-content-center">
+                          Mecánico 
+                        </div>
+                      </th>
+                      <th className="col-3" colSpan="1">
+                        <div className="d-flex justify-content-center">
+                          Notas
+                        </div>
+                      </th>
+                    
+                     
+                    </tr>
+                  </thead>
+              
+                  <tbody className="table-body">
+                  {servicios.map((servicio) => (
+                      <tr key={servicio.id}>
+                        <td className="col-11">
+                          
+                          <select
+                            className="col-8"
+                            name="labor_type"
+                            value={servicio.labor_type}
+                       
+                            onChange={(e) => {
+                              
+                            }}
+                          >
+                            <option></option>
+                            
+                          <option value="Soldadura">Soldadura</option>
+                          <option value="Suspensión y/o llantas">Suspensión y/o llantas</option>
+                          <option value="Pintura">Pintura</option>
+                          <option value="Eléctrico">Eléctrico</option>
+                          <option value="Torno">Torno</option>
+                          <option value="Trabajo mecánico">Trabajo mecánico</option>
+                           
+                          </select>
+                        </td>
+
+                        <td className="col-1">
+     
+              <button
+                          className="btn btn-success btn-sm col-12"
+                          onClick={(e) => {
+                            handleSumbit(e);
+                          }}
+                        >
+                          {"Agregar"}
+                         
+                        </button>
+            <button
+                          className="btn btn-danger d-none col-12"
+                          type="button"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button>
+                        </td>
+                        
+                      
+                       
+                          
+                     
+                     
+                      </tr>
+
+                      
+                    ))}
+
+                    <tr>
+
+
+                    </tr>
+
+
+
+
+
+
+
+
+
+
+
+                  {/* {ordenTrabajoData.found_fault_lines.map((linea, i) => (
+                    <tr key={i}>
+                      <td className="col-10">{linea.found_fault_data.fault}
+                      
+                      </td>
+
+                        <td className="col-2">
+                      
+                      <button
+                          className="btn btn-danger btn-sm col-12"
+                          onClick={(e) => {
+                            handleClick(e, linea);
+                          }}
+                        >
+                          {linea.found_fault_data.id && "Eliminar"}
+                         
+                        </button>
+            <button
+                          className="btn btn-danger d-none"
+                          type="button"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button></td>
+                    </tr>
+
+                    
+            ))} */}
+                  </tbody>
+            
+                </table>
+
+
+
+
+
+
               </div>
             </div>
 

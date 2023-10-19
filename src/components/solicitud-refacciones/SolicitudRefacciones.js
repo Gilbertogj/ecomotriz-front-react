@@ -625,6 +625,7 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
                             className="col-4"
                             name="busquedaString"
                             value={parte.busquedaString}
+                            placeholder="Busqueda de refaccion"
                             autoComplete="off"
                             onChange={(e) => {
                               getPartes(e, parte);
