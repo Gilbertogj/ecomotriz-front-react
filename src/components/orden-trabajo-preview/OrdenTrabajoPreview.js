@@ -3,7 +3,7 @@ import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { formatNumToMxnCurrency } from "../../utils/formatNumToMxnCurrency";
 import { ReactReduxContext } from "../../context/reactReduxContext";
 import { setCurrentUser } from "../../redux/user/userSlice";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link, useLocation, useHistory } from "react-router-dom";
 
 import Localizacion from "../../assets/img/Localizacion.png";
 import Telefono from "../../assets/img/telefono.png";
@@ -29,15 +29,31 @@ const partsInitialState = [
   },
 ];
 
-const serviciosInitialState = [
+// const serviciosInitialState = [
+//   {
+//     id: 1,
+
+ 
+//     price:"",
+//     notes:"",
+//     labor_type:"",
+//     user:"",
+
+//   },
+// ];
+
+const manoObraInitialState = [
   {
     id: 1,
+
+  
 
  
     price:"",
     notes:"",
     labor_type:"",
     user:"",
+    mechanic:"",
 
   },
 ];
@@ -74,9 +90,13 @@ export const OrdenTrabajoPreview = ({
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [parts, setParts] = useState(partsInitialState);
-  const [servicios, setServicios] = useState(serviciosInitialState);
+  // const [servicios, setServicios] = useState(serviciosInitialState);
+  const [manoObra, setManoObra] = useState(manoObraInitialState);
+  const history = useHistory();
+  
 
-  console.log(form.estado)
+ 
+
 
 
   const openModal = () => {
@@ -140,24 +160,24 @@ export const OrdenTrabajoPreview = ({
       const arr = [...prevState];
 
     
-      if (e.target.name === "busquedaString") {
-        arr[parteRef.id - 1] = {
-          ...arr[parteRef.id - 1],
-          description:"",
-          producto: "",
-          rack:"",
+      // if (e.target.name === "busquedaString") {
+      //   arr[parteRef.id - 1] = {
+      //     ...arr[parteRef.id - 1],
+      //     description:"",
+      //     producto: "",
+      //     rack:"",
           
          
-        };
-      }
+      //   };
+      // }
 
-      if (e.target.name === "description") {
-        arr[parteRef.id - 1] = {
-          ...arr[parteRef.id - 1],
-          rack: "",
+      // if (e.target.name === "description") {
+      //   arr[parteRef.id - 1] = {
+      //     ...arr[parteRef.id - 1],
+      //     rack: "",
        
-        };
-      }
+      //   };
+      // }
 
       arr[parteRef.id - 1] = {
         ...arr[parteRef.id - 1],
@@ -165,8 +185,36 @@ export const OrdenTrabajoPreview = ({
       };
       return arr;
     });
+
+    
   };
 
+  console.log(parts);
+  console.log(changeParteInput);
+
+  const changeServicioInput = (e, servicioRef) => {
+    setManoObra((prevState) => {
+      const arr = [...prevState];
+
+     
+
+    
+      
+
+      arr[servicioRef.id - 1] = {
+        ...arr[servicioRef.id - 1],
+        [`${e.target.name}`]: e.target.value,
+    
+      };
+      return arr;
+      
+     
+    });
+
+
+    
+  };
+console.log(manoObra);
 
 
 
@@ -254,6 +302,129 @@ export const OrdenTrabajoPreview = ({
 
   const handleReload = () => {
     window.location.reload(); // Reload the page when the button is clicked
+  };
+
+  const handleSubmitManoObra = async (e) => {
+    e.preventDefault();
+
+    
+
+  
+
+
+
+    const formattedServices = [];
+    
+
+    manoObra.forEach((servicio) => {
+      console.log(servicio);
+
+  
+      const obj = {
+       
+        
+        price:servicio.price,
+        notes:servicio.notes,
+        labor_type:servicio.labor_type,
+        user:1,
+        mechanic:1,
+        work_order: String(ordenTrabajoData.id),
+
+
+        
+
+
+       
+
+
+      };
+      formattedServices.push(obj);
+    });
+
+      
+
+ 
+
+    let falla=0;
+
+    formattedServices.forEach((formattedService) => {
+     falla= formattedServices.part;
+     console.log(falla);
+    });
+
+   
+    console.log(formattedServices);
+
+
+
+    const dict_data = {
+  
+  
+      // price: 0,
+      // work_order: String(ordenTrabajoData.id),
+  
+
+      price: formattedServices[0].price,
+      notes: formattedServices[0].notes,
+      labor_type: formattedServices[0].labor_type,
+      work_order: String(ordenTrabajoData.id),
+      user:1,
+      mechanic:1,
+
+  
+
+     
+   
+    };
+
+    console.log(formattedServices)
+
+    let data = await fetch(
+      "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/internalservicelines/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${authtoken}`,
+        },
+        body: JSON.stringify(dict_data),
+      }
+    );
+
+    // console.log(dict_data);
+
+    let json = await data.json();
+
+    if (json.expired) {
+      dispatch(setCurrentUser({ token: json.token }));
+
+      data = await fetch(
+        "https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/internalservicelines/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${json.token}`,
+          },
+          body: JSON.stringify(dict_data),
+        }
+      );
+
+      json = await data.json();
+    }
+
+    if (data.status === 201) {
+      handleReload();
+      /* alert("Se ha creado correctamente la cotización."); */
+
+      // setShowConfirmModal(true);
+
+      /* history.push(`/concreco/comercializacion/cotizaciones`); */
+    } else if (data.status === 406) {
+      alert(json.error);
+    } else {
+      alert(JSON.stringify(json));
+    }
   };
 
   const handleSumbit = async (e) => {
@@ -363,7 +534,9 @@ export const OrdenTrabajoPreview = ({
     } else {
       alert(JSON.stringify(json));
     }
+   
   };
+
 
   return (
     <>
@@ -716,8 +889,6 @@ export const OrdenTrabajoPreview = ({
                               );
 
                               console.log(newArr);
-
-
                               setParts((prevState) => {
                                 const arr = [...prevState];
 
@@ -729,6 +900,9 @@ export const OrdenTrabajoPreview = ({
 
                                 return arr;
                               });
+
+
+                             
 
                               changeParteInput(e, parte);
                        
@@ -942,37 +1116,97 @@ export const OrdenTrabajoPreview = ({
                   </thead>
               
                   <tbody className="table-body">
-                  {servicios.map((servicio) => (
+                  {manoObra.map((servicio) => (
                       <tr key={servicio.id}>
-                        <td className="col-11">
-                          
-                          <select
+                        <td className="col-4">
+
+                        <select
                             className="col-8"
                             name="labor_type"
                             value={servicio.labor_type}
+                            
                        
                             onChange={(e) => {
-                              
+                        
+
+                              changeServicioInput(e, servicio);
+                       
                             }}
                           >
                             <option></option>
                             
-                          <option value="Soldadura">Soldadura</option>
-                          <option value="Suspensión y/o llantas">Suspensión y/o llantas</option>
+                            <option value="Soldadura">Soldadura</option>
+                            <option value="Suspensión y/o llantas">Suspensión y/o llantas</option>
                           <option value="Pintura">Pintura</option>
                           <option value="Eléctrico">Eléctrico</option>
                           <option value="Torno">Torno</option>
                           <option value="Trabajo mecánico">Trabajo mecánico</option>
-                           
+                          
                           </select>
+                          
+                     
                         </td>
+
+
+
+                      <td className="col-2">
+                      <input
+                            type="number"
+                            className="col-12"
+                            name="price"
+                            value={servicio.price}
+                            onChange={(e) => {
+                              changeServicioInput(e, servicio);
+                              
+                            }}
+                            autoComplete="off"
+                            required
+                            onWheel={(e) => {
+                              e.target.blur();
+                            }}
+                          /> </td>
+
+                    <td className="col-3">
+                      <input
+                            type="text"
+                            className="col-12"
+                            name="mechanic"
+                            value={servicio.mechanic}
+                            onChange={(e) => {
+                              changeServicioInput(e, servicio);
+                              
+                            }}
+                            autoComplete="off"
+                            required
+                            onWheel={(e) => {
+                              e.target.blur();
+                            }}
+                          /> </td>
+
+                      <td className="col-3">
+                      <input
+                            type="text"
+                            className="col-12"
+                            name="notes"
+                            value={servicio.notes}
+                            onChange={(e) => {
+                              changeServicioInput(e, servicio);
+                              
+                            }}
+                            autoComplete="off"
+                            required
+                            onWheel={(e) => {
+                              e.target.blur();
+                            }}
+                          /> </td>
+                       
 
                         <td className="col-1">
      
               <button
                           className="btn btn-success btn-sm col-12"
                           onClick={(e) => {
-                            handleSumbit(e);
+                            handleSubmitManoObra(e);
                           }}
                         >
                           {"Agregar"}
@@ -992,21 +1226,18 @@ export const OrdenTrabajoPreview = ({
                         </button>
                         </td>
                         
-                      
+                        
                        
                           
                      
                      
                       </tr>
+                      ))}
 
                       
-                    ))}
+                    
 
-                    <tr>
-
-
-                    </tr>
-
+                   
 
 
 
