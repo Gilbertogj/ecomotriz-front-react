@@ -593,7 +593,7 @@ console.log(manoObra);
 
 
     
-      <div className="d-flex justify-content-end mb-3">
+      {/* <div className="d-flex justify-content-end mb-3">
             
             <Link
               to={`/ordenes-trabajo/orden/${ordenTrabajoData.id}/fallas-encontradas`}
@@ -603,7 +603,7 @@ console.log(manoObra);
         
 
          
-        </div>
+        </div> */}
       <div className="d-flex justify-content-end mb-3">
             
             <Link
@@ -616,7 +616,7 @@ console.log(manoObra);
          
         </div>
 
-        {ordenTrabajoData.status === "Closed" && (
+        {/* {ordenTrabajoData.status === "Closed" && (
   <div className="d-flex justify-content-end mb-3">
     <Link
       to={`/ordenes-trabajo/orden/${ordenTrabajoData.id}/crear-solicitud`}
@@ -625,7 +625,7 @@ console.log(manoObra);
       Agregar Solicitud de refacciones
     </Link>
   </div>
-)}
+)} */}
 
 
 

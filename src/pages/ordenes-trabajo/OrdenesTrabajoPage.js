@@ -142,7 +142,7 @@ export const OrdenesTrabajoPage = () => {
         <Route exact path={`${path}/orden/:idOrden/solicitud-refacciones/:idSolicitud`}>
           <div className="p-3">
             <DetallesSolicitudRefaccionesPage />
-            {/* <p>hola si funciona</p> */}
+            {/* <p>funciona asi solo</p> */}
           </div>
         </Route>
 

@@ -36,7 +36,7 @@ export const DetallesSolicitudRefaccionesPage = () => {
         <LoadingSpinner />
       ) : (
         <DetallesSolicitudRefacciones solicitudData={data} />
-        // <p>hola </p>
+        // <p>hola aqui si funciona 22 </p>
       )}
   
 

@@ -240,7 +240,7 @@ const handleClick = async (e, linea) => {
     <div className="d-flex justify-content-end mb-3">
             
             <Link
-              to={pathname.includes('/compras') ? '/compras/lista-refacciones' : `/ordenes-trabajo/orden/${ordenTrabajoData.id}`}
+              to={pathname.includes('/compras') ? '/compras/lista-refacciones' : `/ordenes-trabajo/orden/${idOrden}`}
               className="btn btn-secondary"
             >Regresar
             </Link>
