@@ -52,7 +52,7 @@ const manoObraInitialState = [
     price:"",
     notes:"",
     labor_type:"",
-    user:"",
+    
     mechanic:"",
 
   },
@@ -326,7 +326,7 @@ console.log(manoObra);
         price:servicio.price,
         notes:servicio.notes,
         labor_type:servicio.labor_type,
-        user:1,
+        // user:1,
         mechanic:1,
         work_order: String(ordenTrabajoData.id),
 
@@ -368,7 +368,7 @@ console.log(manoObra);
       notes: formattedServices[0].notes,
       labor_type: formattedServices[0].labor_type,
       work_order: String(ordenTrabajoData.id),
-      user:1,
+      // user:1,
       mechanic:1,
 
   
@@ -1233,6 +1233,43 @@ console.log(manoObra);
                      
                       </tr>
                       ))}
+
+{ordenTrabajoData.internal_serivice_lines.map((linea, i) => (
+                    <tr key={i}>
+                      <td className="col-10">{linea.labor_type}
+                      
+                      </td>
+                      <td className="col-10">{linea.price}
+                      
+                      </td>
+
+                        {/* <td className="col-2">
+                      
+                      <button
+                          className="btn btn-danger btn-sm col-12"
+                          onClick={(e) => {
+                            handleClick(e, linea);
+                          }}
+                        >
+                          {linea.found_fault_data.id && "Eliminar"}
+                         
+                        </button>
+            <button
+                          className="btn btn-danger d-none"
+                          type="button"
+                          
+                        >
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="visually-hidden">Loading...</span>
+                        </button></td> */}
+                    </tr>
+
+                    
+            ))}
 
                       
                     

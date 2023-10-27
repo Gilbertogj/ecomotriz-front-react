@@ -10,7 +10,7 @@ export const LogOutButton = () => {
 
   const LogOut = async () => {
     const data = await fetch(
-      `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api/logout?token=${authtoken}`,
+      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/logout?token=${authtoken}`,
       {
         headers: {
           Authorization: `Token ${authtoken}`,
