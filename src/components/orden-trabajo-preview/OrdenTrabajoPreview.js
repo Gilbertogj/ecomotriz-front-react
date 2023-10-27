@@ -4,6 +4,7 @@ import { formatNumToMxnCurrency } from "../../utils/formatNumToMxnCurrency";
 import { ReactReduxContext } from "../../context/reactReduxContext";
 import { setCurrentUser } from "../../redux/user/userSlice";
 import { useParams, Link, useLocation, useHistory } from "react-router-dom";
+import { fetchData } from "../../utils/fetchData";
 
 import Localizacion from "../../assets/img/Localizacion.png";
 import Telefono from "../../assets/img/telefono.png";
@@ -92,6 +93,9 @@ export const OrdenTrabajoPreview = ({
   const [parts, setParts] = useState(partsInitialState);
   // const [servicios, setServicios] = useState(serviciosInitialState);
   const [manoObra, setManoObra] = useState(manoObraInitialState);
+  const [mecanicosInputFocused, setMecanicosInputFocused] = useState(false);
+  const [mecanicos, setMecanicos] = useState([]);
+  const [showMecanicosSpinner, setShowMecanicosSpinner] = useState(false);
   const history = useHistory();
   
 
@@ -537,6 +541,21 @@ console.log(manoObra);
    
   };
 
+  
+  const fetchMecanicos = async () => {
+    setShowMecanicosSpinner(true);
+
+    const fetchedData = await fetchData(
+      `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/users/?user_type=Mechanic`,
+      authtoken,
+      dispatch,
+      setCurrentUser
+    );
+
+    setMecanicos(fetchedData.results);
+    setShowMecanicosSpinner(false);
+  };
+
 
   return (
     <>
@@ -961,7 +980,7 @@ console.log(manoObra);
 
                   {ordenTrabajoData.found_fault_lines.map((linea, i) => (
                     <tr key={i}>
-                      <td className="col-10">{linea.found_fault_data.fault}
+                      <td className="col-10">{linea.found_fault_data.job_code+" - "+linea.found_fault_data.fault}
                       
                       </td>
 
@@ -1095,7 +1114,7 @@ console.log(manoObra);
                           Tipo de trabajo 
                         </div>
                       </th>
-                      <th className="col-2" colSpan="1">
+                      <th className="col-1" colSpan="1">
                         <div className="d-flex justify-content-center">
                           Precio
                         </div>
@@ -1105,7 +1124,7 @@ console.log(manoObra);
                           Mecánico 
                         </div>
                       </th>
-                      <th className="col-3" colSpan="1">
+                      <th className="col-4" colSpan="2">
                         <div className="d-flex justify-content-center">
                           Notas
                         </div>
@@ -1118,10 +1137,10 @@ console.log(manoObra);
                   <tbody className="table-body">
                   {manoObra.map((servicio) => (
                       <tr key={servicio.id}>
-                        <td className="col-4">
+                        <td className="col-3">
 
                         <select
-                            className="col-8"
+                            className="col-12"
                             name="labor_type"
                             value={servicio.labor_type}
                             
@@ -1149,7 +1168,7 @@ console.log(manoObra);
 
 
 
-                      <td className="col-2">
+                      <td className="col-1">
                       <input
                             type="number"
                             className="col-12"
@@ -1167,7 +1186,12 @@ console.log(manoObra);
                           /> </td>
 
                     <td className="col-3">
-                      <input
+                    {showMecanicosSpinner && (
+                        <div className="spinner-border spinner-border-sm ms-3" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                        </div>
+                      )}
+                      {/* <input
                             type="text"
                             className="col-12"
                             name="mechanic"
@@ -1181,9 +1205,38 @@ console.log(manoObra);
                             onWheel={(e) => {
                               e.target.blur();
                             }}
-                          /> </td>
+                          />  */}
+                          <select
+                          
+                                id="mechanic"
+                                name="mechanic"
+                                // className="form-select "
+                                className="col-12"
+                                onChange={handleChange}
+                                onFocus={() => {
+                                  if (!mecanicosInputFocused) {
+                                    fetchMecanicos();
+                                  }
 
-                      <td className="col-3">
+                                  setMecanicosInputFocused(true);
+                                }}
+                              >
+                                {/* <option value="">Todos</option> */}
+                                {mecanicos.map((mecanico) => (
+                                  <option key={mecanico.id} value={mecanico.name}>
+                                    {mecanico.name}
+                                  </option>
+                                ))}
+                          </select>
+                          
+                          </td>
+
+
+
+
+
+
+                      <td className="col-4">
                       <input
                             type="text"
                             className="col-12"
@@ -1201,7 +1254,7 @@ console.log(manoObra);
                           /> </td>
                        
 
-                        <td className="col-1">
+                        <td className="col-2">
      
               <button
                           className="btn btn-success btn-sm col-12"
@@ -1236,36 +1289,20 @@ console.log(manoObra);
 
 {ordenTrabajoData.internal_serivice_lines.map((linea, i) => (
                     <tr key={i}>
-                      <td className="col-10">{linea.labor_type}
+                      <td className="col-4">{linea.labor_type}
                       
                       </td>
-                      <td className="col-10">{linea.price}
+                      <td className="col-2">{"$"+linea.price}
+                      
+                      </td>
+                      <td className="col-3">{linea.mechanic_data.name+" "+linea.mechanic_data.last_name}
+                      
+                      </td>
+                      <td className="col-3">{linea.notes}
                       
                       </td>
 
-                        {/* <td className="col-2">
-                      
-                      <button
-                          className="btn btn-danger btn-sm col-12"
-                          onClick={(e) => {
-                            handleClick(e, linea);
-                          }}
-                        >
-                          {linea.found_fault_data.id && "Eliminar"}
-                         
-                        </button>
-            <button
-                          className="btn btn-danger d-none"
-                          type="button"
-                          
-                        >
-                          <span
-                            className="spinner-border spinner-border-sm"
-                            role="status"
-                            aria-hidden="true"
-                          ></span>
-                          <span className="visually-hidden">Loading...</span>
-                        </button></td> */}
+                       
                     </tr>
 
                     

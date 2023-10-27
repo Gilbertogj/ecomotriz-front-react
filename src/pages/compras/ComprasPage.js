@@ -113,8 +113,8 @@ export const ComprasPage = () => {
 
         <Route exact path={`${path}/orden/:idOrden/solicitud-refacciones/:idSolicitud`}>
           <div className="p-3">
-            {/* <DetallesSolicitudRefaccionesPage /> */}
-            <p>hola si funciona</p>
+            <DetallesSolicitudRefaccionesPage />
+            {/* <p>hola si funciona</p> */}
           </div>
         </Route>
 
