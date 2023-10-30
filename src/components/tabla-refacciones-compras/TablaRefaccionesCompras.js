@@ -421,7 +421,7 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
                         </button>
             </td>
 
-            <td>{refaccion.bought ? "SÍ" : "NO"}</td>
+           
 
         
         

@@ -502,6 +502,9 @@ const handleClick = async (e, linea) => {
             <td>{linea.part_data[0].sae_key}</td>
             <td>{linea.part_data[0].description}</td>
             <td>{linea.price}</td>
+            
+            {pathname.includes('/ordenes-trabajo') ? 
+            
             <td>{linea.status}
             <button
                           className="btn btn-primary btn-sm"
@@ -525,6 +528,7 @@ const handleClick = async (e, linea) => {
                           <span className="visually-hidden">Loading...</span>
                         </button>
             </td>
+            :  <td>{linea.status}</td>}
 
             <td>{linea.bought ? "SÍ" : "NO"}</td>
           

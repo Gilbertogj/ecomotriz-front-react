@@ -43,125 +43,6 @@ export const OrdenTrabajoCompras = ({
 
   console.log(form.estado)
 
-  const getDiseños = async (e, diseñoRef) => {
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        precios: [],
-      };
-
-      return arr;
-    });
-
-    const url = `${process.env.REACT_APP_API_CONCRECO_BACKEND_URL}/api_comercializacion/productos/?ubicacion=${form.ciudad}&diseño=${e.target.value}`;
-
-    let data = await fetch(url, {
-      headers: {
-        Authorization: `Token ${authtoken}`,
-      },
-    });
-
-    let json = await data.json();
-
-    if (json.expired) {
-      dispatch(setCurrentUser({ token: json.token }));
-
-      data = await fetch(url, {
-        headers: {
-          Authorization: `Token ${json.token}`,
-        },
-      });
-
-      json = await data.json();
-    }
-
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        diseñosData: json.results,
-      };
-
-      return arr;
-    });
-  };
-  const changeDiseñoInput = (e, diseñoRef) => {
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      if (e.target.name === "busquedaString") {
-        arr[diseñoRef.id - 1] = {
-          ...arr[diseñoRef.id - 1],
-          precioUnitario: "",
-          nombre: "",
-          producto: "",
-        };
-      }
-
-      if (e.target.name === "nombre") {
-        arr[diseñoRef.id - 1] = {
-          ...arr[diseñoRef.id - 1],
-          precioUnitario: "",
-        };
-      }
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        [`${e.target.name}`]: e.target.value,
-      };
-
-      return arr;
-    });
-  };
-
-  const agregarDiseño = () => {
-    setDiseños((prevState) => {
-      const newArr = [...prevState];
-
-      newArr.push({
-        id: diseños.length + 1,
-        busquedaString: "",
-        nombre: "",
-        precioUnitario: "",
-        cantidad: "",
-        diseñosData: [],
-        precios: [],
-        subtotal: "",
-        producto: "",
-        unidad: "",
-      });
-
-      return newArr;
-    });
-  };
-
-  const eliminarDiseño = () => {
-    setDiseños((prevState) => {
-      const newArr = [...prevState];
-      newArr.pop();
-      return newArr;
-    });
-  };
-  const actualizarSubtotal = (diseñoRef) => {
-    setDiseños((prevState) => {
-      const arr = [...prevState];
-
-      arr[diseñoRef.id - 1] = {
-        ...arr[diseñoRef.id - 1],
-        subtotal:
-          prevState[diseñoRef.id - 1].precioUnitario &&
-          prevState[diseñoRef.id - 1].cantidad &&
-          Number(prevState[diseñoRef.id - 1].precioUnitario) *
-            Number(prevState[diseñoRef.id - 1].cantidad),
-      };
-
-      return arr;
-    });
-  };
-
   const handleClick = async (e, linea) => {
     try {
       e.target.classList.add("d-none");
@@ -550,44 +431,18 @@ export const OrdenTrabajoCompras = ({
                           Fallas ecnontradas
                         </div>
                       </th>
-                      <th className="col-1">
-                        <div className="d-flex justify-content-center">
-                        
-                        </div>
-                      </th>
+                      
                      
                     </tr>
                   </thead>
                   <tbody className="table-body">
                   {ordenTrabajoData.found_fault_lines.map((linea, i) => (
                     <tr key={i}>
-                      <td>{linea.found_fault.fault}
+                      <td>{linea.found_fault_data.job_code+" - "+linea.found_fault_data.fault}
                       
           </td>
 
-                        <td>
                       
-                      <button
-                          className="btn btn-danger btn-sm"
-                          onClick={(e) => {
-                            handleClick(e, linea);
-                          }}
-                        >
-                          {linea.found_fault.fault && "Eliminar"}
-                         
-                        </button>
-            <button
-                          className="btn btn-danger d-none"
-                          type="checkbox"
-                          
-                        >
-                          <span
-                            className="spinner-border spinner-border-sm"
-                            role="status"
-                            aria-hidden="true"
-                          ></span>
-                          <span className="visually-hidden">Loading...</span>
-                        </button></td>
                     </tr>
 
                     

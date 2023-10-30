@@ -7,6 +7,8 @@ import { LoginPage } from "./pages/login/LoginPage";
 import { HomePage } from "./pages/home/HomePage";
 import { OrdenesTrabajoPage } from "./pages/ordenes-trabajo/OrdenesTrabajoPage";
 import { ComprasPage } from "./pages/compras/ComprasPage";
+import { AlmacenPage } from "./pages/almacen/AlmacenPage";
+
 
 import { EcomotrizPage } from "./pages/ecomotriz/EcomotrizPage";
 import { ComercializacionPage } from "./pages/comercializacion/ComercializacionPage";
@@ -73,6 +75,38 @@ function App() {
             )
           }
         />
+
+        <Route
+          path="/almacen"
+          render={() =>
+            currentUser ? (
+              userRol === "Administracion" ||
+              userRol === "Ventas" ||
+              userRol === "Produccion" ? (
+                <AlmacenPage />
+              ) : (
+                <Redirect to="/home" />
+              )
+            ) : (
+              <Redirect to="/" />
+            )
+          }
+        />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <Route
           path="/comercializacion"
           render={() =>

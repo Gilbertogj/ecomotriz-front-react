@@ -212,6 +212,7 @@ export const OrdenTrabajo = () => {
       // folio: undefined, 
       estimated_delivery_date: form.estimated_delivery_date,
       reported_fault_lines: formattedFallas,
+      folio: form.folio,
       // tipo_venta: obraData.cliente_detail.pago,
     };
 
@@ -326,6 +327,18 @@ export const OrdenTrabajo = () => {
 
                       
                     </tr>
+                    <tr>
+                  <td>Folio Orden:</td>
+                  <input
+                          type="text"
+                          className="col-12"
+                          name="folio"
+                          value={form.folio}
+                          onChange={handleChangeForm}
+                          autoComplete="off"
+                          required
+                        />
+                </tr>
           
                   </tbody>
                 </table>

@@ -12,6 +12,11 @@ export const userTypeLinks = {
       link: `${BASE_URL}/compras`,
       id: 2,
     },
+    {
+      text: "Almacén ",
+      link: `${BASE_URL}/almacen`,
+      id: 3,
+    },
    
   ],
   Ventas: [
@@ -142,6 +147,62 @@ export const comprasLinks = {
     {
       text: "Lista de Refacciones",
       link: `${BASE_URL}/compras/lista-refacciones`,
+      id: 1,
+    },
+
+   
+
+    
+    
+  ],
+
+  Ventas: [
+    {
+      text: "Lista de Clientes",
+      link: `${BASE_URL}/logistica/clientes`,
+      id: 1,
+    },
+    {
+      text: "Lista de Pedidos",
+      link: `${BASE_URL}/logistica/pedidos`,
+      id: 2,
+    },
+    {
+      text: "Realizar Pedido",
+      link: `${BASE_URL}/logistica/clientes-pedido`,
+      id: 3,
+    },
+  ],
+
+  Produccion: [
+    {
+      text: "Lista de Clientes",
+      link: `${BASE_URL}/logistica/clientes`,
+      id: 1,
+    },
+    {
+      text: "Lista de Pedidos",
+      link: `${BASE_URL}/logistica/pedidos`,
+      id: 2,
+    },
+    {
+      text: "Realizar Pedido",
+      link: `${BASE_URL}/logistica/clientes-pedido`,
+      id: 3,
+    },
+  ],
+};
+
+export const almacenLinks = {
+  Administracion: [
+    // {
+    //   text: "Lista de Clientes",
+    //   link: `${BASE_URL}/unidades/clientes`,
+    //   id: 1,
+    // },
+    {
+      text: "Lista de Solicitudes de Refacciones",
+      link: `${BASE_URL}/almacen/lista-solicitudes-refaccion`,
       id: 1,
     },
 
