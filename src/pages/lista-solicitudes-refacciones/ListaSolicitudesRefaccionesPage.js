@@ -94,7 +94,7 @@ export const ListaSolicitudesRefaccionesPage  = () => {
       </Row>
       
 
-      <div class="contenedor-circulo">
+      {/* <div class="contenedor-circulo">
         <div class="circulo verde"></div>
         <span>No atendida</span>
     </div>
@@ -105,7 +105,7 @@ export const ListaSolicitudesRefaccionesPage  = () => {
     <div class="contenedor-circulo">
         <div class="circulo amarillo"></div>
         <span>Cerrada</span>
-    </div>
+    </div> */}
 
       {/* {userRol !== "Operador" && (
         <Row className="mb-3 justify-content-center">
