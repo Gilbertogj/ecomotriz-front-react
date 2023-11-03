@@ -331,7 +331,7 @@ console.log(manoObra);
         notes:servicio.notes,
         labor_type:servicio.labor_type,
         // user:1,
-        mechanic:1,
+        mechanic:servicio.mechanic,
         work_order: String(ordenTrabajoData.id),
 
 
@@ -373,7 +373,7 @@ console.log(manoObra);
       labor_type: formattedServices[0].labor_type,
       work_order: String(ordenTrabajoData.id),
       // user:1,
-      mechanic:1,
+      mechanic:formattedServices[0].mechanic,
 
   
 
@@ -527,7 +527,7 @@ console.log(manoObra);
     }
 
     if (data.status === 201) {
-      handleReload();
+      // handleReload();
       /* alert("Se ha creado correctamente la cotización."); */
 
       // setShowConfirmModal(true);
@@ -1212,7 +1212,13 @@ console.log(manoObra);
                                 name="mechanic"
                                 // className="form-select "
                                 className="col-12"
-                                onChange={handleChange}
+                                onChange={(e) => {
+                        
+
+                                  changeServicioInput(e, servicio);
+                           
+                                }}
+                                value={servicio.mechanic}
                                 onFocus={() => {
                                   if (!mecanicosInputFocused) {
                                     fetchMecanicos();
@@ -1222,11 +1228,16 @@ console.log(manoObra);
                                 }}
                               >
                                 {/* <option value="">Todos</option> */}
+                                <option></option>
                                 {mecanicos.map((mecanico) => (
-                                  <option key={mecanico.id} value={mecanico.name}>
+                                  <option key={mecanico.id} value={mecanico.id}>
                                     {mecanico.name}
                                   </option>
                                 ))}
+{/* 
+                                  <option  value="1">
+                                    "sss"
+                                  </option> */}
                           </select>
                           
                           </td>

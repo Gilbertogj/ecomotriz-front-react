@@ -20,19 +20,19 @@ export const HomePage = () => {
 
   const isDesktop = useIsDesktop();
 
-  useEffect(() => {
-    (async () => {
-      const fetchedData = await fetchData(
-        process.env.REACT_APP_API_CONCRECO_BACKEND_URL + "/api/users/my_role/",
-        authtoken,
-        dispatch,
-        setCurrentUser
-      );
+  // useEffect(() => {
+  //   (async () => {
+  //     const fetchedData = await fetchData(
+  //       process.env.REACT_APP_API_CONCRECO_BACKEND_URL + "/api/users/my_role/",
+  //       authtoken,
+  //       dispatch,
+  //       setCurrentUser
+  //     );
 
-      dispatch(setUserRole("Administracion"));
-    })();
-  }, []);
-
+  //     dispatch(setUserRole("Administracion"));
+  //   })();
+  // }, []);
+  dispatch(setUserRole("Administracion"));
   return (
     <div className="homepage-container">
       {isDesktop && (

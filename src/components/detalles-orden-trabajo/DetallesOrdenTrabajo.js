@@ -31,6 +31,23 @@ export const DetallesOrdenTrabajo = ({ data }) => {
   const history = useHistory();
 
   const actualizarEstatusBtnRef = useRef();
+  const fechaHoy = new Date();
+  const year = fechaHoy.getFullYear();
+const month = String(fechaHoy.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so add 1 and pad to two digits
+const day = String(fechaHoy.getDate()).padStart(2, '0');
+const hours = String(fechaHoy.getHours()).padStart(2, '0');
+const minutes = String(fechaHoy.getMinutes()).padStart(2, '0');
+const seconds = String(fechaHoy.getSeconds()).padStart(2, '0');
+const milliseconds = String(fechaHoy.getMilliseconds()).padStart(3, '0');
+const timeZoneOffset = fechaHoy.getTimezoneOffset();
+
+// Calculate the timezone offset in hours and minutes
+const offsetHours = Math.floor(Math.abs(timeZoneOffset) / 60);
+const offsetMinutes = Math.abs(timeZoneOffset) % 60;
+const offsetSign = timeZoneOffset >= 0 ? '-' : '+';
+
+// Format the date and time
+const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
 
   // useEffect(() => {
   //   if (!editMode) {
@@ -68,6 +85,9 @@ export const DetallesOrdenTrabajo = ({ data }) => {
     let formData = new FormData();
 
     formData.append("status", form.status);
+    if (form.status === "Closed") {
+      formData.append("deadline", formattedDate);
+    }
     
     let data = await fetch(
       `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/${ordenTrabajoData.id}/`,
