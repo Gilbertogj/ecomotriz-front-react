@@ -106,6 +106,7 @@ export const TablaSolicitudesRefacciones= ({ solicitudes, setSolicitudes }) => {
               <th>Fecha</th>
               <th>Cliente</th>
               <th>Número económico</th>
+              <th>Partes</th>
               
              
             </tr>
@@ -175,6 +176,40 @@ export const TablaSolicitudesRefacciones= ({ solicitudes, setSolicitudes }) => {
              
                   </Link>
                 </td>
+                <td>
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${solicitud.work_order}/solicitud-refacciones/${solicitud.id}`
+                    }
+                  >
+                    {"cliente" }
+             
+                  </Link>
+                </td>
+                <td>
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${solicitud.work_order}/solicitud-refacciones/${solicitud.id}`
+                    }
+                  >
+                    {"numero economico"}
+             
+                  </Link>
+                </td>
+                {solicitud.part_lines.map((parte) => (
+                 
+                <td>
+                  {parte.part_data.map((renglon) => (
+                  <Link
+                    to={ `/ordenes-trabajo/orden/${solicitud.work_order}/solicitud-refacciones/${solicitud.id}`
+                    }
+                  >
+                    
+                    {"-"+renglon.description}
+                  
+             
+                  </Link>
+                    ))}
+                </td>
+                ))}
                 {/* <td>
                   <Link
                     to={ `/ordenes-trabajo/orden/${orden.id}`

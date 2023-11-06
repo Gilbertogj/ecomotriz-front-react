@@ -1,10 +1,15 @@
 
         /* Define un estilo CSS para los círculos */
-        .contenedor-circulo {
+
+        .flex-container {
             display: flex;
-            align-items: center;
-            margin-bottom: 0px; /* Espacio vertical reducido entre los elementos */
         }
+        // .contenedor-circulo {
+        //     display: flex;
+        //     align-items: center;
+        //     justify-content: space-between;
+        //     margin-bottom: 0px; /* Espacio vertical reducido entre los elementos */
+        // }
 
         .circulo {
             width: 20px; /* Tamaño del círculo reducido a 20px */

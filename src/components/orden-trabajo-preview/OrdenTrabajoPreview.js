@@ -1234,10 +1234,7 @@ console.log(manoObra);
                                     {mecanico.name}
                                   </option>
                                 ))}
-{/* 
-                                  <option  value="1">
-                                    "sss"
-                                  </option> */}
+
                           </select>
                           
                           </td>

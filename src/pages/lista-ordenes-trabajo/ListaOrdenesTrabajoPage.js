@@ -9,27 +9,27 @@ import { fetchData } from "../../utils/fetchData";
 import { SearchInput } from "../../components/search-input/SearchInput";
 import { TablaOrdenesTrabajo } from "../../components/tabla-ordenes-trabajo/TablaOrdenesTrabajo";
 import { LoadingSpinner } from "../../components/loading-spinner/LoadingSpinner";
-import { FormFiltrosUnidades } from "../../components/form-filtros-unidades/FormFiltrosUnidades";
+import { FormFiltrosOrdenes } from "../../components/form-filtros-ordenes/FormFiltrosOrdenes";
 import { BotonesPaginacionTablas } from "../../components/botones-paginacion-tablas/BotonesPaginacionTablas";
 import "./ListaOrdenesTrabajoPage.styles.scss";
 
-// const formInitialState = {
-//   empresa_alta: "",
-//     empresa_responsable: "",
-//     categoria: "",
-//     familia: "",
-//     subfamilia: "",
+const formInitialState = {
+  empresa_alta: "",
+    empresa_responsable: "",
+    categoria: "",
+    familia: "",
+    subfamilia: "",
    
-//   };
+  };
 
 export const ListaOrdenesTrabajoPage  = () => {
   const [ordenes, setOrdenes] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [finalPage, setFinalPage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  // const [filtrosAplicadosUnidades, setFiltrosAplicadosUnidades] =
-  //   useState(formInitialState);
-  //   const [totalUnidades, setTotalUnidades] = useState(null);
+  const [filtrosAplicadosUnidades, setFiltrosAplicadosUnidades] =
+    useState(formInitialState);
+    const [totalUnidades, setTotalUnidades] = useState(null);
 
 
 
@@ -94,18 +94,7 @@ export const ListaOrdenesTrabajoPage  = () => {
       </Row>
       
 
-      <div class="contenedor-circulo">
-        <div class="circulo verde"></div>
-        <span>No atendida</span>
-    </div>
-    <div class="contenedor-circulo">
-        <div class="circulo rojo"></div>
-        <span>En proceso</span>
-    </div>
-    <div class="contenedor-circulo">
-        <div class="circulo amarillo"></div>
-        <span>Cerrada</span>
-    </div>
+      
 
       {/* {userRol !== "Operador" && (
         <Row className="mb-3 justify-content-center">
@@ -127,8 +116,8 @@ export const ListaOrdenesTrabajoPage  = () => {
         </Row>
       )} */}
 
-      {/* {userRol !== "Operador" && ( 
-         <FormFiltrosUnidades
+      {userRol !== "Operador" && ( 
+         <FormFiltrosOrdenes
           setFiltrosAplicadosUnidades={setFiltrosAplicadosUnidades}
           setOrdenes={setOrdenes}
           
@@ -142,8 +131,21 @@ export const ListaOrdenesTrabajoPage  = () => {
           filtrosAplicadosUnidades={filtrosAplicadosUnidades}
           busquedaAplicada={busquedaAplicada}
         /> 
-       )}  */}
-
+       )} 
+<div class="flex-container">
+<div class="contenedor-circulo">
+        <div class="circulo verde"></div>
+        <span>No atendida</span>
+    </div>
+    <div class="contenedor-circulo">
+        <div class="circulo rojo"></div>
+        <span>En proceso</span>
+    </div>
+    <div class="contenedor-circulo">
+        <div class="circulo amarillo"></div>
+        <span>Cerrada</span>
+    </div>
+    </div>
       {isLoading ? (
         <LoadingSpinner />
       ) : (
