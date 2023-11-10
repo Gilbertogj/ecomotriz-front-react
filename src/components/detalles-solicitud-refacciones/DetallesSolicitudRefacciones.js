@@ -165,8 +165,83 @@ const handleClick = async (e, linea) => {
 
       if (linea.status === "Suministrado") {
         status = "Por Suministrar";
-        bought = true;
+        bought = false;
       }
+
+      formData.append("status", status);
+      formData.append("bought", bought);
+
+      let data = await fetch(
+        `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${linea.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Token ${authtoken}`,
+          },
+          body: formData,
+        }
+      );
+
+      let json = await data.json();
+
+      if (json.expired) {
+        dispatch(setCurrentUser({ token: json.token }));
+
+        data = await fetch(
+          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/partslines/${linea.id}/`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Token ${json.token}`,
+            },
+            body: formData,
+          }
+        );
+
+        json = await data.json();
+      }
+
+      if (data.status === 201 || data.status === 200) {
+        setShow(true);
+        // setPedidos((prevState) => {
+        //   const arr = [...prevState];
+
+        //   const arrElementsStringifed = arr.map((el) => JSON.stringify(el));
+
+        //   const idx = arrElementsStringifed.indexOf(JSON.stringify(pedido));
+
+        //   arr.splice(idx, 1, json);
+
+        //   return arr;
+        // });
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    } finally {
+      e.target.nextSibling.classList.add("d-none");
+      e.target.classList.remove("d-none");
+    }
+  };
+
+  const handleClickCompras = async (e, linea) => {
+    try {
+      e.target.classList.add("d-none");
+
+      e.target.nextSibling.classList.remove("d-none");
+
+      let formData = new FormData();
+
+      let status;
+      let bought;
+
+
+      
+        status = "Compras";
+        bought = true;
+        
+    
+    
 
       formData.append("status", status);
       formData.append("bought", bought);
@@ -506,6 +581,7 @@ const handleClick = async (e, linea) => {
             {pathname.includes('/ordenes-trabajo') ? 
             
             <td>{linea.status}
+            {linea.status != "Compras" ? (
             <button
                           className="btn btn-primary btn-sm"
                           onClick={(e) => {
@@ -514,7 +590,25 @@ const handleClick = async (e, linea) => {
                         >
                           {linea.status === "Suministrado" && "Por Suministrar"}
                           {linea.status === "Por Suministrar" && "Suministrado"}
+                         
+                          
                         </button>
+
+) : (
+  null // or any other content you want to show when status is not "Suministrado"
+)}
+                        {linea.status === "Por Suministrar" ? (
+                          <button
+                        className="btn btn-warning btn-sm"
+                              onClick={(e) => {
+                                handleClickCompras(e, linea);
+                              }}
+                            >
+                              Compras
+                            </button>
+                          ) : (
+                            null // or any other content you want to show when status is not "Suministrado"
+                          )}
             <button
                           className="btn btn-primary d-none"
                           type="checkbox"

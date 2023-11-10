@@ -187,6 +187,8 @@ import React, {
         setIsLoading(true);
   
         let fechaIntervalo = "";
+        let status
+        status=state.status;
   
         if (state.startDate && state.endDate) {
           const fechaInicio = state.startDate
@@ -205,7 +207,7 @@ import React, {
         }
   
         const fetchedData = await fetchDataWithoutAuthentication(
-          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/?&fecha_intervalo=${fechaIntervalo}`,
+          `https://ec2-3-20-255-18.us-east-2.compute.amazonaws.com/api/core/workorders/?&fecha_intervalo=${fechaIntervalo}&status=${status}`,
           authtoken,
           dispatch,
           setCurrentUser
@@ -243,8 +245,8 @@ import React, {
     return (
       <div className="row mb-3">
         <div className="col-6 col-md-3">
-          {/* <label htmlFor="categoria" className="form-label">
-            Categoría
+          <label htmlFor="categoria" className="form-label">
+            Status
           </label>
           <select
             id="categoria"
@@ -252,13 +254,12 @@ import React, {
             className="form-select"
             onChange={handleChange}
           >
-            <option value="">Todas</option>
-            <option value="1">01 León</option>
-            <option value="2">02 Puerto Interior</option>
-            <option value="3">03 Salida a Lagos</option>
-            <option value="4">04 San Miguel</option>
-            <option value="5">05 San Pancho</option>
-          </select> */}
+            <option value=""></option>
+            <option value="Abierta">Abierta</option>
+            <option value="Cerrada">Cerrada</option>
+            <option value="En Porceso">En Porceso</option>
+            
+          </select>
   
             {/* <CustomSelect
                   datos={OpcionesSelectCategoriaUnidadFiltros}

@@ -181,10 +181,19 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
       e.target.nextSibling.classList.remove("d-none");
 
       let formData = new FormData();
+
+  
     
 
     
       formData.append("price", nuevoPrecio);
+      
+        
+    
+    
+
+      formData.append("status", "Por Suministrar");
+      formData.append("bought", false);
       
 
       let data = await fetch(
@@ -262,8 +271,8 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
               <th>Descripción</th>
               <th>Precio</th>
             
-              <th>Compras </th>
-              
+              {/* <th>Compras </th>
+               */}
              
             </tr>
           </thead>
@@ -354,7 +363,7 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
                 </td>
                 <td>
                   
-
+                  {"$"}
                 <input
                           type="number"
                           className="col-6"
@@ -397,7 +406,7 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
                 
                 </td>
 
-                <td>{refaccion.status}
+                {/* <td>{refaccion.status}
             <button
                           className="btn btn-primary btn-sm"
                           onClick={(e) => {
@@ -419,7 +428,7 @@ export const TablaRefaccionesCompras = ({ refacciones, setRefacciones }) => {
                           ></span>
                           <span className="visually-hidden">Loading...</span>
                         </button>
-            </td>
+            </td> */}
 
            
 
