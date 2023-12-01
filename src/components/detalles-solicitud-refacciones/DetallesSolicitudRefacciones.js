@@ -524,12 +524,12 @@ const handleClick = async (e, linea) => {
                       </th>
                       <th className="col-3">
                         <div className="d-flex justify-content-center">
-                          Suministro
+                          Estatus
                         </div>
                       </th>
                       <th className="col-3">
                         <div className="d-flex justify-content-center">
-                          Compras
+                          Suministro
                         </div>
                       </th>
                     
@@ -624,7 +624,8 @@ const handleClick = async (e, linea) => {
             </td>
             :  <td>{linea.status}</td>}
 
-            <td>{linea.bought ? "SÍ" : "NO"}</td>
+            <td>{linea.bought || linea.status=="Por suministrar" ? "Compras" : "Suministrado"}</td>
+            
           
           </tr>
           
