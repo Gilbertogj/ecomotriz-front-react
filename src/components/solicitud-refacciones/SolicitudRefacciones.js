@@ -670,7 +670,7 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
                        
                             }}
                           >
-                            <option></option>
+                            {/* <option></option> */}
                             {parte.partsData.map((data) => (
                               <option key={data.id} value={data.description}>
                                 {data.sae_key} {"-"} {data.description}
@@ -729,7 +729,7 @@ export const SolicitudRefacciones = ({ ordenTrabajoData }) => {
                 className="btn btn-success"
                 onClick={agregarParte}
               >
-                Agregar Falla
+                Agregar Refacción
               </button>
               {parts.length > 1 && (
                 <button

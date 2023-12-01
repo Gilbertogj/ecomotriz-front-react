@@ -90,7 +90,7 @@ export const ListaRefaccionesComprasPage  = () => {
   return (
     <Container style={{ maxWidth: "100%", maxHeight: "100%" }}>
       <Row className="text-center mb-3">
-        <h3 className="m-0">Lista de Refacciones Compras</h3>
+        <h3 className="m-0">Solicitudes de Compra</h3>
       </Row>
       
 

@@ -527,7 +527,7 @@ console.log(manoObra);
     }
 
     if (data.status === 201) {
-      // handleReload();
+      handleReload();
       /* alert("Se ha creado correctamente la cotización."); */
 
       // setShowConfirmModal(true);
@@ -927,7 +927,7 @@ console.log(manoObra);
                        
                             }}
                           >
-                            <option></option>
+                            {/* <option></option> */}
                             {parte.partsData.map((data) => (
                               <option key={data.id} value={data.fault}>
                                 {data.job_code} {"-"} {data.fault}

@@ -493,7 +493,7 @@ const handleClick = async (e, linea) => {
 
             <div>
             <div className="text-center m-3">
-          <h3>Solicitudes de Refacciones</h3>
+          <h3>Solicitudes de Refacciones {solicitudData.folio}</h3>
         </div>
               <div className="table-responsive">
            
